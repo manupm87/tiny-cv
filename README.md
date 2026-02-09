@@ -20,7 +20,7 @@ Make sure you have [Node.js](https://nodejs.org/) installed on your machine.
 1. Clone the repository:
    ```bash
    git clone <repository-url>
-   cd comic-cv-spa
+   cd tiny-cv
    ```
 
 2. Install dependencies:
