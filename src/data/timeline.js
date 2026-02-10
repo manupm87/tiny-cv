@@ -1,6 +1,7 @@
 export const timelineData = [
   {
     id: "intro",
+    period: "Intro",
     title: "Manuel Pérez Martínez",
     location: "Gijón, Spain",
     type: "intro",
@@ -17,6 +18,7 @@ export const timelineData = [
   },
   {
     id: "education",
+    period: "2003 - 2012",
     title: "The Foundation",
     location: "Gijón & Bologna",
     type: "slide",
@@ -62,6 +64,7 @@ export const timelineData = [
   },
   {
     id: "asturias",
+    period: "2012 - 2015",
     title: "Early Career",
     location: "Asturias, Spain",
     type: "slide",
@@ -96,6 +99,7 @@ export const timelineData = [
   },
   {
     id: "budapest",
+    period: "2015 - 2019",
     title: "The R&D Era",
     location: "Budapest, Hungary",
     type: "slide",
@@ -124,6 +128,7 @@ export const timelineData = [
   },
   {
     id: "london",
+    period: "2019 - 2022",
     title: "The Fintech & Data Scale-up",
     location: "London, UK",
     type: "slide",
@@ -167,6 +172,7 @@ export const timelineData = [
   },
   {
     id: "gijon-return",
+    period: "2022 - Present",
     title: "The Architect & AI",
     location: "Gijón, Spain (Remote)",
     type: "slide",

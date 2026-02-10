@@ -234,6 +234,15 @@ body {
   flex-direction: row-reverse;
 }
 
+.location-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  width: 100%;
+  padding: 2rem 0;
+}
+
 .location-image {
   flex: 1;
   display: flex;
@@ -251,6 +260,12 @@ body {
   object-fit: cover;
 }
 
+.location-col .location-img {
+  max-width: 300px;
+  box-shadow: none;
+  margin-bottom: 1rem;
+}
+
 .location-img:hover {
   transform: scale(1.02);
 }
@@ -261,6 +276,10 @@ body {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+}
+
+.location-col .location-cards {
+  max-width: 800px;
 }
 
 .location-city-title {
