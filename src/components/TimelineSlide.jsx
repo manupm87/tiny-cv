@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import InfoCard from './InfoCard';
 
 const TimelineSlide = ({ data, index }) => {
-  const isFoundations = data.id === 'education';
+  const isMultiLocation = data.locations && data.locations.length > 1;
 
   return (
     <section className="timeline-section" id={data.id}>
@@ -22,10 +22,10 @@ const TimelineSlide = ({ data, index }) => {
           </p>
         </div>
 
-        <div className="locations-wrapper">
+        <div className={isMultiLocation ? "multi-location-row" : "locations-wrapper"}>
           {data.locations && data.locations.map((location, locIndex) => {
             let layoutClass;
-            if (isFoundations) {
+            if (isMultiLocation) {
               layoutClass = 'location-col';
             } else {
               const isReverse = index % 2 !== 0;
