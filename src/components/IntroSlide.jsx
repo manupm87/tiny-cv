@@ -7,7 +7,6 @@ const IntroSlide = ({ data }) => {
 
   return (
     <section className="timeline-section" id={data.id}>
-      <div className="bg-mesh" />
       <motion.div
         className="glass-card"
         style={{
@@ -51,12 +50,12 @@ const IntroSlide = ({ data }) => {
         </div>
 
         <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap', justifyContent: 'center' }}>
-            <a href={`mailto:${content.email}`} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-primary)', textDecoration: 'none' }}>
-                <Mail size={20} /> {content.email}
-            </a>
-            <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-primary)' }}>
-                <Smartphone size={20} /> {content.mobile}
-            </span>
+          <a href={`mailto:${content.email}`} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-primary)', textDecoration: 'none' }}>
+            <Mail size={20} /> {content.email}
+          </a>
+          <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-primary)' }}>
+            <Smartphone size={20} /> {content.mobile}
+          </span>
         </div>
 
         <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>

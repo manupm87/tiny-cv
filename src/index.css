@@ -1,14 +1,22 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
 
 :root {
-  --primary-blue: #0ea5e9;
-  --dark-blue: #0f172a;
-  --light-blue: #e0f2fe;
-  --glass-bg: rgba(255, 255, 255, 0.1);
-  --glass-border: rgba(255, 255, 255, 0.2);
-  --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
-  --accent: #38bdf8;
+  /* Core Colors - Liquid Glass Scheme */
+  --primary-blue: #38bdf8; /* Lighter, more vibrant blue */
+  --primary-glow: rgba(56, 189, 248, 0.6);
+  --secondary-purple: #c084fc;
+  --bg-dark: #000000; /* Deep black for contrast */
+  
+  /* Glass Vars */
+  --glass-bg: rgba(255, 255, 255, 0.08);
+  --glass-border: rgba(255, 255, 255, 0.15);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.36);
+  --glass-blur: blur(24px);
+  
+  /* Text */
+  --text-primary: rgba(255, 255, 255, 0.95);
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --text-tertiary: rgba(255, 255, 255, 0.5);
 }
 
 * {
@@ -18,9 +26,63 @@
 body {
   margin: 0;
   font-family: 'Inter', sans-serif;
-  background-color: var(--dark-blue);
+  background-color: var(--bg-dark);
   color: var(--text-primary);
   overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 
+  Background - Dynamic Liquid Mesh 
+  Using fixed positions to create a unified backdrop across scrolls
+*/
+.bg-mesh {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  background: 
+    radial-gradient(circle at 15% 50%, rgba(56, 189, 248, 0.15), transparent 25%),
+    radial-gradient(circle at 85% 30%, rgba(192, 132, 252, 0.15), transparent 25%);
+  filter: blur(60px);
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+/* Animated floating orbs for "Liquid" feel */
+.bg-orb {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(80px);
+  z-index: -1;
+  opacity: 0.6;
+  animation: floatOrb 20s infinite ease-in-out;
+}
+
+.bg-orb.one {
+  width: 500px;
+  height: 500px;
+  background: var(--primary-blue);
+  top: -100px;
+  left: -100px;
+  animation-delay: 0s;
+}
+
+.bg-orb.two {
+  width: 400px;
+  height: 400px;
+  background: var(--secondary-purple);
+  bottom: -50px;
+  right: -50px;
+  animation-delay: -5s;
+}
+
+@keyframes floatOrb {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, 50px) scale(1.1); }
+  66% { transform: translate(-20px, 20px) scale(0.9); }
 }
 
 .timeline-container {
@@ -29,7 +91,12 @@ body {
   overflow-y: scroll;
   scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
-  background: radial-gradient(circle at 50% 50%, #1e293b 0%, #0f172a 100%);
+  /* Hide scrollbar but keep functionality */
+  scrollbar-width: none; 
+  -ms-overflow-style: none;
+}
+.timeline-container::-webkit-scrollbar { 
+  display: none; 
 }
 
 .timeline-section {
@@ -49,190 +116,161 @@ body {
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  z-index: 1;
 }
 
 .section-title {
-  font-size: 3rem;
-  font-weight: 700;
-  background: linear-gradient(to right, #38bdf8, #818cf8);
+  font-size: 3.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.7) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   margin: 0;
-  text-transform: uppercase;
-  letter-spacing: -0.05em;
+  letter-spacing: -0.02em;
+  text-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
 
 .section-subtitle {
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   color: var(--text-secondary);
+  font-weight: 400;
   margin-top: 0.5rem;
-  font-weight: 300;
-}
-
-/* Scrollbar hiding */
-.timeline-container::-webkit-scrollbar {
-  display: none;
-}
-.timeline-container {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-/* Background mesh effect */
-.bg-mesh {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-  opacity: 0.3;
-  background-image:
-    linear-gradient(rgba(56, 189, 248, 0.1) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(56, 189, 248, 0.1) 1px, transparent 1px);
-  background-size: 50px 50px;
-  pointer-events: none;
 }
 
 /* =========================================
-   New Styles for Refactored Timeline
+   LIQUID GLASS COMPONENTS
    ========================================= */
 
-/* Glass Card - Apple "Liquid Glass" Style */
 .glass-card {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 24px;
-  padding: 2rem;
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur) saturate(180%);
+  -webkit-backdrop-filter: var(--glass-blur) saturate(180%);
+  border: 1px solid var(--glass-border);
+  border-radius: 32px;
+  padding: 2.5rem;
+  box-shadow: 
+    var(--glass-shadow),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1); 
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 1.5rem;
-  transition: all 0.3s ease;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.4s ease;
   position: relative;
   overflow: hidden;
 }
 
-.glass-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.4);
-  border-color: rgba(255, 255, 255, 0.2);
-}
-
-/* Subtle gradient overlay */
-.glass-card::before {
+/* Highlight flare on top */
+.glass-card::after {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 100%;
-  background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 100%);
+  height: 40%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
   pointer-events: none;
   z-index: 0;
-  border-radius: 24px;
 }
 
-.card-content, .card-tags {
+.glass-card:hover {
+  transform: translateY(-8px) scale(1.01);
+  box-shadow: 
+    0 20px 40px rgba(0,0,0,0.4),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.glass-card.job {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.08), rgba(255,255,255,0.03));
+}
+
+.glass-card.education {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.08), rgba(255,255,255,0.03));
+}
+
+.card-content {
   position: relative;
   z-index: 1;
 }
 
-/* Job vs Education Variants */
-.glass-card.job {
-  border-left: 4px solid var(--primary-blue);
-  background: linear-gradient(145deg, rgba(14, 165, 233, 0.05), rgba(255, 255, 255, 0.02));
-}
-
-.glass-card.education {
-  border-left: 4px solid #a855f7; /* Purple for education */
-  background: linear-gradient(145deg, rgba(168, 85, 247, 0.05), rgba(255, 255, 255, 0.02));
-}
-
-/* Typography inside card */
 .card-title {
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-size: 1.4rem;
+  font-weight: 700;
   color: var(--text-primary);
   margin: 0 0 0.5rem 0;
 }
 
 .card-org {
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 500;
-  color: var(--accent);
-  margin: 0 0 0.25rem 0;
+  color: var(--primary-blue);
+  margin-bottom: 0.25rem;
 }
 
 .glass-card.education .card-org {
-  color: #c084fc; /* Lighter purple */
+  color: var(--secondary-purple);
 }
 
 .card-period {
-  font-size: 0.875rem;
-  color: var(--text-secondary);
+  font-size: 0.9rem;
+  color: var(--text-tertiary);
+  margin-bottom: 1.25rem;
   display: block;
-  margin-bottom: 1rem;
-  font-style: italic;
 }
 
 .card-details {
   padding-left: 1.2rem;
   color: var(--text-secondary);
-  margin: 0;
-  font-size: 0.95rem;
+  font-size: 1rem;
   line-height: 1.6;
+  margin: 0 0 1.5rem 0;
 }
 
 .card-details li {
   margin-bottom: 0.5rem;
 }
 
-/* Tags */
 .card-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.6rem;
   margin-top: auto;
+  position: relative;
+  z-index: 1;
 }
 
 .card-tag {
-  padding: 0.25rem 0.75rem;
-  border-radius: 999px;
-  font-size: 0.75rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: 99px;
+  font-size: 0.8rem;
   font-weight: 600;
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(10px);
+  transition: all 0.2s;
 }
 
 .glass-card.job .card-tag {
   background: rgba(56, 189, 248, 0.15);
-  color: var(--primary-blue);
-  border: 1px solid rgba(56, 189, 248, 0.2);
+  color: #7dd3fc;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+.glass-card.job .card-tag:hover {
+  background: rgba(56, 189, 248, 0.25);
 }
 
 .glass-card.education .card-tag {
   background: rgba(168, 85, 247, 0.15);
-  color: #c084fc;
-  border: 1px solid rgba(168, 85, 247, 0.2);
+  color: #e879f9;
+  border: 1px solid rgba(168, 85, 247, 0.3);
 }
 
-/* Layout for Locations */
 .location-row {
   display: flex;
-  flex-direction: row;
-  align-items: center;
   gap: 4rem;
-  width: 100%;
   padding: 2rem 0;
+  align-items: center;
 }
-
-.location-row.reverse {
-  flex-direction: row-reverse;
-}
+.location-row.reverse { flex-direction: row-reverse; }
 
 .location-col {
   display: flex;
@@ -245,19 +283,15 @@ body {
 
 .location-image {
   flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .location-img {
   width: 100%;
-  max-width: 500px;
-  height: auto;
-  border-radius: 24px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-  transition: transform 0.3s ease;
-  object-fit: cover;
+  border-radius: 32px;
+  /* Glass border around image */
+  border: 4px solid rgba(255,255,255,0.05); 
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  transition: transform 0.5s ease;
 }
 
 .location-col .location-img {
@@ -267,12 +301,11 @@ body {
 }
 
 .location-img:hover {
-  transform: scale(1.02);
+  transform: scale(1.02) rotate(1deg);
 }
 
 .location-cards {
   flex: 1;
-  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -283,25 +316,12 @@ body {
 }
 
 .location-city-title {
-  font-size: 2rem;
-  font-weight: 700;
+  font-size: 2.5rem;
+  font-weight: 800;
   color: var(--text-primary);
-  margin: 0 0 1.5rem 0;
-  text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  margin-bottom: 1.5rem;
   position: relative;
   display: inline-block;
-  align-self: flex-start;
-}
-
-.location-city-title::after {
-  content: '';
-  position: absolute;
-  bottom: -8px;
-  left: 0;
-  width: 60px;
-  height: 4px;
-  background: var(--accent);
-  border-radius: 2px;
 }
 
 .cards-list {
@@ -311,22 +331,28 @@ body {
 }
 
 /* Responsive */
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
   .location-row, .location-row.reverse {
     flex-direction: column;
     gap: 2rem;
   }
+  .section-title { font-size: 2.5rem; }
+  .glass-card { padding: 1.5rem; }
+}
 
-  .location-image {
-    order: -1; /* Image always on top on mobile */
-    width: 100%;
-  }
-
-  .location-cards {
-    width: 100%;
-  }
-
-  .location-img {
-    max-width: 100%;
-  }
+/* Liquid Button Utility */
+.liquid-button {
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 99px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.liquid-button:hover {
+  background: rgba(255,255,255,0.2);
+  box-shadow: 0 0 20px var(--primary-glow);
 }

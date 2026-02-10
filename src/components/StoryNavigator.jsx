@@ -20,7 +20,7 @@ const StoryNavigator = ({ sections, activeId }) => {
         top: 0,
         bottom: 0,
         width: '2px',
-        background: 'rgba(255, 255, 255, 0.1)',
+        background: 'var(--glass-border)',
         zIndex: -1
       }} />
 
@@ -32,32 +32,35 @@ const StoryNavigator = ({ sections, activeId }) => {
             key={section.id}
             href={`#${section.id}`}
             style={{
-                position: 'relative',
-                display: 'flex',
-                alignItems: 'center',
-                textDecoration: 'none'
+              position: 'relative',
+              display: 'flex',
+              alignItems: 'center',
+              textDecoration: 'none'
             }}
             aria-label={`Go to ${section.title}`}
           >
             {/* Tooltip on hover */}
             <div
-               className="nav-tooltip"
-               style={{
-                 position: 'absolute',
-                 right: '100%',
-                 marginRight: '1rem',
-                 background: 'rgba(15, 23, 42, 0.8)',
-                 padding: '0.5rem 1rem',
-                 borderRadius: '4px',
-                 color: 'white',
-                 fontSize: '0.875rem',
-                 whiteSpace: 'nowrap',
-                 opacity: isActive ? 1 : 0,
-                 pointerEvents: 'none',
-                 transition: 'opacity 0.2s',
-                 backdropFilter: 'blur(4px)',
-                 border: '1px solid rgba(255,255,255,0.1)'
-               }}
+              className="nav-tooltip"
+              style={{
+                position: 'absolute',
+                right: '100%',
+                marginRight: '1rem',
+                background: 'var(--glass-bg)',
+                padding: '0.5rem 1rem',
+                borderRadius: '12px',
+                color: 'var(--text-primary)',
+                fontSize: '0.875rem',
+                fontWeight: 500,
+                whiteSpace: 'nowrap',
+                opacity: isActive ? 1 : 0,
+                pointerEvents: 'none',
+                transition: 'opacity 0.2s',
+                backdropFilter: 'var(--glass-blur)',
+                WebkitBackdropFilter: 'var(--glass-blur)',
+                border: '1px solid var(--glass-border)',
+                boxShadow: 'var(--glass-shadow)'
+              }}
             >
               {section.period}
             </div>
@@ -66,8 +69,8 @@ const StoryNavigator = ({ sections, activeId }) => {
             <motion.div
               animate={{
                 scale: isActive ? 1.5 : 1,
-                backgroundColor: isActive ? 'var(--primary-blue)' : 'rgba(255, 255, 255, 0.2)',
-                border: isActive ? '2px solid rgba(56, 189, 248, 0.5)' : '2px solid transparent'
+                backgroundColor: isActive ? 'var(--primary-blue)' : 'var(--glass-border)',
+                border: isActive ? '2px solid var(--primary-glow)' : '2px solid transparent'
               }}
               style={{
                 width: '12px',

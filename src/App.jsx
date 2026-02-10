@@ -36,6 +36,11 @@ function App() {
 
   return (
     <div className="timeline-container">
+      {/* Global Background Elements */}
+      <div className="bg-mesh" />
+      <div className="bg-orb one" />
+      <div className="bg-orb two" />
+
       <StoryNavigator sections={timelineData} activeId={activeId} />
 
       {timelineData.map((item, index) => {
