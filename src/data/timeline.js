@@ -26,7 +26,7 @@ export const timelineData = [
     locations: [
       {
         city: "Gijón",
-        image: "/img/placeholder.png",
+        image: "/img/gijon.png",
         cards: [
           {
             title: "International Baccalaureate",
@@ -107,7 +107,7 @@ export const timelineData = [
     locations: [
       {
         city: "Budapest",
-        image: "/img/placeholder.png",
+        image: "/img/budapest.png",
         cards: [
           {
             title: "Senior R&D Engineer",
@@ -180,7 +180,7 @@ export const timelineData = [
     locations: [
       {
         city: "Gijón",
-        image: "/img/placeholder.png",
+        image: "/img/gijon.png",
         cards: [
           {
             title: "Cloud Platform Engineer / Architect",
