@@ -2,7 +2,9 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import InfoCard from './InfoCard';
 
-const TimelineSlide = ({ data }) => {
+const TimelineSlide = ({ data, index }) => {
+  const isFoundations = data.id === 'education';
+
   return (
     <section className="timeline-section" id={data.id}>
       <motion.div
@@ -21,12 +23,19 @@ const TimelineSlide = ({ data }) => {
         </div>
 
         <div className="locations-wrapper">
-          {data.locations && data.locations.map((location, index) => {
-            const isEven = index % 2 === 0;
+          {data.locations && data.locations.map((location, locIndex) => {
+            let layoutClass;
+            if (isFoundations) {
+              layoutClass = 'location-col';
+            } else {
+              const isReverse = index % 2 !== 0;
+              layoutClass = `location-row ${isReverse ? 'reverse' : ''}`;
+            }
+
             return (
               <div
-                key={index}
-                className={`location-row ${!isEven ? 'reverse' : ''}`}
+                key={locIndex}
+                className={layoutClass}
               >
                 {/* Image Section */}
                 <div className="location-image">
@@ -41,7 +50,6 @@ const TimelineSlide = ({ data }) => {
 
                 {/* Cards Section */}
                 <div className="location-cards">
-                  <h3 className="location-city-title">{location.city}</h3>
                   <div className="cards-list">
                     {location.cards.map((card, cardIndex) => (
                       <InfoCard key={cardIndex} {...card} />

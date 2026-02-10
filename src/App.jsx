@@ -38,11 +38,11 @@ function App() {
     <div className="timeline-container">
       <StoryNavigator sections={timelineData} activeId={activeId} />
 
-      {timelineData.map((item) => {
+      {timelineData.map((item, index) => {
         if (item.type === 'intro') {
           return <IntroSlide key={item.id} data={item} isActive={activeId === item.id} />;
         }
-        return <TimelineSlide key={item.id} data={item} isActive={activeId === item.id} />;
+        return <TimelineSlide key={item.id} data={item} index={index} isActive={activeId === item.id} />;
       })}
     </div>
   );
