@@ -35,68 +35,6 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* 
-  Background - Dynamic Liquid Mesh 
-  Using fixed positions to create a unified backdrop across scrolls
-*/
-.bg-mesh {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: -1;
-  background:
-    radial-gradient(circle at 15% 50%, rgba(56, 189, 248, 0.15), transparent 25%),
-    radial-gradient(circle at 85% 30%, rgba(192, 132, 252, 0.15), transparent 25%);
-  filter: blur(60px);
-  opacity: 0.8;
-  pointer-events: none;
-}
-
-/* Animated floating orbs for "Liquid" feel */
-.bg-orb {
-  position: fixed;
-  border-radius: 50%;
-  filter: blur(80px);
-  z-index: -1;
-  opacity: 0.6;
-  animation: floatOrb 20s infinite ease-in-out;
-}
-
-.bg-orb.one {
-  width: 500px;
-  height: 500px;
-  background: var(--primary-blue);
-  top: -100px;
-  left: -100px;
-  animation-delay: 0s;
-}
-
-.bg-orb.two {
-  width: 400px;
-  height: 400px;
-  background: var(--secondary-purple);
-  bottom: -50px;
-  right: -50px;
-  animation-delay: -5s;
-}
-
-@keyframes floatOrb {
-
-  0%,
-  100% {
-    transform: translate(0, 0) scale(1);
-  }
-
-  33% {
-    transform: translate(30px, 50px) scale(1.1);
-  }
-
-  66% {
-    transform: translate(-20px, 20px) scale(0.9);
-  }
-}
 
 .timeline-container {
   height: 100vh;
@@ -233,7 +171,8 @@ body {
 }
 
 .card-details {
-  list-style: none; /* Remove default bullets */
+  list-style: none;
+  /* Remove default bullets */
   padding-left: 0;
   color: var(--text-secondary);
   font-size: 1rem;
@@ -338,21 +277,21 @@ body {
 
 .location-img {
   width: 100%;
-  border-radius: 32px;
-  /* Glass border around image */
-  border: 4px solid rgba(255, 255, 255, 0.05);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-  transition: transform 0.5s ease;
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
+  filter: drop-shadow(0 30px 50px rgba(0, 0, 0, 0.6));
+  transition: transform 0.5s ease, filter 0.5s ease;
 }
 
 .location-col .location-img {
-  max-width: 300px;
-  box-shadow: none;
+  max-width: 350px;
   margin-bottom: 1rem;
 }
 
 .location-img:hover {
-  transform: scale(1.02) rotate(1deg);
+  transform: scale(1.05) translateY(-10px);
+  filter: drop-shadow(0 40px 60px rgba(0, 0, 0, 0.7));
 }
 
 .location-cards {

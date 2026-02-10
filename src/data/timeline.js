@@ -63,16 +63,16 @@ export const timelineData = [
     ]
   },
   {
-    id: "asturias",
+    id: "gijon-early",
     period: "2012 - 2015",
     title: "Early Career",
-    location: "Asturias, Spain",
+    location: "Gijón, Spain",
     type: "slide",
     description: "First steps in the professional world.",
     locations: [
       {
-        city: "Asturias",
-        image: "/img/placeholder.png",
+        city: "Gijón",
+        image: "/img/gijon.png",
         cards: [
           {
             title: "Software Engineer",
@@ -136,7 +136,7 @@ export const timelineData = [
     locations: [
       {
         city: "London",
-        image: "/img/placeholder.png",
+        image: "/img/london.png",
         cards: [
           {
             title: "Cloud Platform Team Lead",
