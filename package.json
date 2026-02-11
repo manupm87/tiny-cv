@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "deploy": "sh scripts/deploy.sh",
+    "deploy:win": "powershell scripts/deploy.ps1",
     "lint": "eslint .",
     "preview": "vite preview"
   },

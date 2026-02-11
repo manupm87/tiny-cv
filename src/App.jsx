@@ -1,12 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { timelineData } from './data/timeline';
 import IntroSlide from './components/IntroSlide';
 import TimelineSlide from './components/TimelineSlide';
 import StoryNavigator from './components/StoryNavigator';
 import BackgroundOrbs from './components/BackgroundOrbs';
+import useIsMobile from './hooks/useIsMobile';
+import { adaptTimelineData } from './utils/timelineUtils';
 
 function App() {
-  const [activeId, setActiveId] = useState(timelineData[0].id);
+  const isMobile = useIsMobile();
+
+  // Adapt data for mobile if needed
+  const slidesData = useMemo(() => adaptTimelineData(timelineData, isMobile), [isMobile]);
+
+  // We default to the first slide's ID
+  const [activeId, setActiveId] = useState(slidesData[0].id);
   const [containerEl, setContainerEl] = useState(null);
 
   const containerRef = React.useCallback(node => {
@@ -18,10 +26,20 @@ function App() {
   const scrollContainerRef = React.useMemo(() => ({ current: containerEl }), [containerEl]);
 
   useEffect(() => {
+    // Update activeId when slidesData changes to avoid stale IDs
+    if (slidesData.length > 0) {
+      // Optional: Reset to top or find the equivalent slide? 
+      // For simplicity, let's just ensure we have a valid ID.
+      // But if we switch views, scroll position might be weird.
+      // Let's rely on intersecting observer to catch up.
+    }
+  }, [slidesData]);
+
+  useEffect(() => {
     const observerOptions = {
-      root: containerEl, // Use the specific container as root if needed, or null for viewport. keeping null for now as per original logic implies viewport or sticking to defaults. Actually originally 'root: null'.
+      root: containerEl,
       rootMargin: '0px',
-      threshold: 0.5,
+      threshold: 0.3, // Lower threshold for better mobile detection
     };
 
     const observerCallback = (entries) => {
@@ -32,10 +50,9 @@ function App() {
       });
     };
 
-    // Only set up observer if we have elements to observe
     const observer = new IntersectionObserver(observerCallback, observerOptions);
 
-    timelineData.forEach((section) => {
+    slidesData.forEach((section) => {
       const element = document.getElementById(section.id);
       if (element) {
         observer.observe(element);
@@ -43,20 +60,20 @@ function App() {
     });
 
     return () => observer.disconnect();
-  }, [containerEl]); // Re-run if containerEl changes, though strictly observer relies on document.getElementById.
+  }, [containerEl, slidesData]);
 
   return (
     <div className="timeline-container" ref={containerRef}>
       {/* Global Background Elements */}
       {containerEl && <BackgroundOrbs scrollContainer={scrollContainerRef} />}
 
-      <StoryNavigator sections={timelineData} activeId={activeId} />
+      {!isMobile && <StoryNavigator sections={timelineData} activeId={activeId} />}
 
-      {timelineData.map((item, index) => {
+      {slidesData.map((item, index) => {
         if (item.type === 'intro') {
-          return <IntroSlide key={item.id} data={item} isActive={activeId === item.id} />;
+          return <IntroSlide key={item.id} data={item} isActive={activeId === item.id} isMobile={isMobile} />;
         }
-        return <TimelineSlide key={item.id} data={item} index={index} isActive={activeId === item.id} />;
+        return <TimelineSlide key={item.id} data={item} index={index} isActive={activeId === item.id} isMobile={isMobile} />;
       })}
     </div>
   );
