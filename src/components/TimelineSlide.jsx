@@ -17,22 +17,23 @@ const TimelineSlide = ({ data, index, isMobile }) => {
           <div className="mobile-header">
             <h2 className="section-title mobile-title">{data.title}</h2>
             <h3 className="section-subtitle mobile-subtitle">{data.location}</h3>
-            {data.mobileCard.image && (
-              <div className="mobile-image-container" style={{ margin: '1rem 0', width: '100%', display: 'flex', justifyContent: 'center' }}>
-                <img
-                  src={data.mobileCard.image}
-                  alt={data.location}
-                  style={{
-                    maxWidth: '100%',
-                    maxHeight: '150px',
-                    borderRadius: '16px',
-                    objectFit: 'cover',
-                    boxShadow: '0 10px 30px rgba(0,0,0,0.3)'
-                  }}
-                />
-              </div>
-            )}
           </div>
+
+          {data.mobileCard.image && (
+            <div className="mobile-image-container">
+              <img
+                src={data.mobileCard.image}
+                alt={data.location}
+                style={{
+                  maxWidth: '100%',
+                  maxHeight: '180px', // Slightly larger max height since it's its own block now
+                  borderRadius: '16px',
+                  objectFit: 'cover',
+                  boxShadow: '0 10px 30px rgba(0,0,0,0.3)'
+                }}
+              />
+            </div>
+          )}
 
           <div className="mobile-card-container">
             <InfoCard {...data.mobileCard} isMobile={true} />
