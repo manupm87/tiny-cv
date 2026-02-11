@@ -7,6 +7,8 @@ import BackgroundOrbs from './components/BackgroundOrbs';
 import useIsMobile from './hooks/useIsMobile';
 import { adaptTimelineData } from './utils/timelineUtils';
 
+import MobileGroupSlide from './components/MobileGroupSlide';
+
 function App() {
   const isMobile = useIsMobile();
 
@@ -72,6 +74,9 @@ function App() {
       {slidesData.map((item, index) => {
         if (item.type === 'intro') {
           return <IntroSlide key={item.id} data={item} isActive={activeId === item.id} isMobile={isMobile} />;
+        }
+        if (item.type === 'mobile-section-group') {
+          return <MobileGroupSlide key={item.id} data={item} />;
         }
         return <TimelineSlide key={item.id} data={item} index={index} isActive={activeId === item.id} isMobile={isMobile} />;
       })}
