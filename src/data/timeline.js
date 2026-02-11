@@ -11,8 +11,8 @@ export const timelineData = [
       mobile: "(+34) 660 163 565",
       summary: "Cloud Platform Architect with extensive experience in GCP, Kubernetes, and DevOps practices.",
       socials: [
-        { name: "LinkedIn", url: "https://linkedin.com/in/manugijon" },
-        { name: "GitHub", url: "https://github.com/manugijon" }
+        { name: "LinkedIn", url: "https://www.linkedin.com/in/mperezmartin/" },
+        { name: "GitHub", url: "https://github.com/manupm87" }
       ]
     }
   },
