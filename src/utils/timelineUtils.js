@@ -25,11 +25,11 @@ export const adaptTimelineData = (data, isMobile) => {
                 location.cards.forEach((card, cardIndex) => {
                     // Create a new slide for each card
                     flattenedData.push({
-                        ...section, // Keep parent properties like period, but override id/title
+                        ...section, // Keep parent properties like period, but override id
                         id: `${section.id}-${locIndex}-${cardIndex}`,
-                        title: card.title, // Use card title as main title
-                        location: `${location.city} • ${card.organization}`, // Combine city and org
-                        description: card.details ? card.details.join(' • ') : '', // Flatten details or keep empty
+                        title: section.title, // Use PARENT section title
+                        description: section.description, // Use PARENT section description
+                        // We strip out 'locations' array and provide a single 'card' property
                         // We strip out 'locations' array and provide a single 'card' property
                         // This simplifies the mobile slide component to just render one thing
                         mobileCard: {

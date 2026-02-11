@@ -33,6 +33,8 @@ body {
   font-weight: 300;
   overflow: hidden;
   -webkit-font-smoothing: antialiased;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 
@@ -98,6 +100,7 @@ body {
   /* Slightly smaller to fit constrained screens */
   line-height: 1.1;
   margin: 0;
+  padding: 0 1rem;
 }
 
 .mobile-subtitle {
@@ -527,7 +530,8 @@ body {
   align-items: center;
   padding: 1rem 1.5rem 2rem 1.5rem;
   /* Top Side Bottom Side */
-  gap: 1rem;
+  /* Top Side Bottom Side */
+  gap: 0.5rem;
 }
 
 .mobile-header {
@@ -536,7 +540,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.25rem;
+  gap: 0.2rem;
 }
 
 .mobile-title {
