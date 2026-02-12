@@ -8,6 +8,7 @@ import useIsMobile from './hooks/useIsMobile';
 import { adaptTimelineData } from './utils/timelineUtils';
 
 import MobileGroupSlide from './components/MobileGroupSlide';
+import './styles/Timeline.css';
 
 function App() {
   const isMobile = useIsMobile();

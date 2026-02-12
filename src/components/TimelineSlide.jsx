@@ -1,6 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import InfoCard from './InfoCard';
+import './../styles/Timeline.css';
+import './../styles/MobileGroup.css';
 
 const TimelineSlide = ({ data, index, isMobile }) => {
   // If we are on mobile and have the special mobileCard prop

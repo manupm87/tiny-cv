@@ -1,0 +1,172 @@
+/* Liquid Glass Card */
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur) saturate(180%);
+    -webkit-backdrop-filter: var(--glass-blur) saturate(180%);
+    border: 1px solid var(--glass-border);
+    border-radius: 32px;
+    padding: 2.5rem;
+    box-shadow:
+        var(--glass-shadow),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.4s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Highlight flare on top */
+.glass-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 40%;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.glass-card:hover {
+    transform: translateY(-8px) scale(1.01);
+    box-shadow:
+        0 20px 40px rgba(0, 0, 0, 0.4),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.glass-card.job {
+    background: linear-gradient(135deg, rgba(56, 189, 248, 0.08), rgba(255, 255, 255, 0.03));
+}
+
+.glass-card.education {
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.08), rgba(255, 255, 255, 0.03));
+}
+
+.card-content {
+    position: relative;
+    z-index: 1;
+}
+
+.card-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 0.5rem 0;
+}
+
+.card-org {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--primary-blue);
+    margin-bottom: 0.25rem;
+}
+
+.glass-card.education .card-org {
+    color: var(--secondary-purple);
+}
+
+.card-period {
+    font-size: 0.9rem;
+    color: var(--text-tertiary);
+    margin-bottom: 1.25rem;
+    display: block;
+}
+
+.card-details {
+    list-style: none;
+    /* Remove default bullets */
+    padding-left: 0;
+    color: var(--text-secondary);
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0 0 1.5rem 0;
+}
+
+.card-details li {
+    margin-bottom: 0.8rem;
+    position: relative;
+    padding-left: 1.5rem;
+}
+
+.card-details li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.7em;
+    width: 12px;
+    height: 1px;
+    background-color: var(--text-tertiary);
+    transition: width 0.3s ease;
+}
+
+.glass-card:hover .card-details li::before {
+    background-color: var(--primary-blue);
+    width: 18px;
+}
+
+.card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: auto;
+    position: relative;
+    z-index: 1;
+}
+
+.card-tag {
+    padding: 0.4rem 0.9rem;
+    border-radius: 99px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    backdrop-filter: blur(10px);
+    transition: all 0.2s;
+}
+
+.glass-card.job .card-tag {
+    background: rgba(56, 189, 248, 0.15);
+    color: #7dd3fc;
+    border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+.glass-card.job .card-tag:hover {
+    background: rgba(56, 189, 248, 0.25);
+}
+
+.glass-card.education .card-tag {
+    background: rgba(168, 85, 247, 0.15);
+    color: #e879f9;
+    border: 1px solid rgba(168, 85, 247, 0.3);
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+    .glass-card {
+        padding: 1.25rem;
+    }
+
+    .card-title {
+        font-size: 1.1rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .card-org {
+        font-size: 0.95rem;
+    }
+
+    .card-details li {
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .card-tags {
+        gap: 0.4rem;
+    }
+
+    .card-tag {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.75rem;
+    }
+}

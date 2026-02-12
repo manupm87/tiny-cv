@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import './../styles/GlassCard.css';
 
 const InfoCard = ({ title, organization, period, details, tags, type }) => {
   return (

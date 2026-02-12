@@ -1,3 +1,8 @@
+import gijonImg from '../assets/images/gijon.png';
+import bolognaImg from '../assets/images/bologna.png';
+import budapestImg from '../assets/images/budapest.png';
+import londonImg from '../assets/images/london.png';
+
 export const timelineData = [
   {
     id: "intro",
@@ -26,7 +31,7 @@ export const timelineData = [
     locations: [
       {
         city: "Gijón",
-        image: "img/gijon.png",
+        image: gijonImg,
         cards: [
           {
             title: "International Baccalaureate",
@@ -48,7 +53,7 @@ export const timelineData = [
       },
       {
         city: "Bologna",
-        image: "img/bologna.png",
+        image: bolognaImg,
         cards: [
           {
             title: "ERASMUS Telecommunication Engineering",
@@ -72,7 +77,7 @@ export const timelineData = [
     locations: [
       {
         city: "Gijón",
-        image: "img/gijon.png",
+        image: gijonImg,
         cards: [
           {
             title: "Software Engineer",
@@ -107,7 +112,7 @@ export const timelineData = [
     locations: [
       {
         city: "Budapest",
-        image: "img/budapest.png",
+        image: budapestImg,
         cards: [
           {
             title: "Senior R&D Engineer",
@@ -136,7 +141,7 @@ export const timelineData = [
     locations: [
       {
         city: "London",
-        image: "img/london.png",
+        image: londonImg,
         cards: [
           {
             title: "Cloud Platform Team Lead",
@@ -180,7 +185,7 @@ export const timelineData = [
     locations: [
       {
         city: "Gijón",
-        image: "img/gijon.png",
+        image: gijonImg,
         cards: [
           {
             title: "Cloud Platform Engineer / Architect",

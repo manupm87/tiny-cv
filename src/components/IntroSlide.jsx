@@ -1,6 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Github, Linkedin, Mail, Smartphone, Cloud, Server, Network } from 'lucide-react';
+import './../styles/IntroSlide.css';
+import './../styles/GlassCard.css';
 
 const IntroSlide = ({ data }) => {
   const { content } = data;

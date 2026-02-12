@@ -1,5 +1,6 @@
 import React from 'react';
 import InfoCard from './InfoCard';
+import './../styles/MobileGroup.css';
 
 const MobileGroupSlide = ({ data }) => {
     // data is now a 'mobile-section-group' containing 'locations'
