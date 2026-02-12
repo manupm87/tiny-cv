@@ -11,8 +11,8 @@ const IntroSlide = ({ data }) => {
     <section className="timeline-section" id={data.id}>
       <Motion.div
         className="glass-card intro-card"
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
+        initial={{ scale: 0.9 }}
+        animate={{ scale: 1 }}
         transition={{ duration: 0.8 }}
       >
 

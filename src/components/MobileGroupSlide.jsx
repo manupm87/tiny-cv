@@ -4,6 +4,11 @@ import './../styles/MobileGroup.css';
 
 const MobileGroupSlide = ({ data }) => {
     // data is now a 'mobile-section-group' containing 'locations'
+    const [expandedCardId, setExpandedCardId] = React.useState(null);
+
+    const handleToggle = (cardId) => {
+        setExpandedCardId(prevId => prevId === cardId ? null : cardId);
+    };
 
     if (!data || !data.locations) return null;
 
@@ -59,7 +64,12 @@ const MobileGroupSlide = ({ data }) => {
                                 className="mobile-card-wrapper"
                             >
                                 <div className="mobile-card-inner">
-                                    <InfoCard {...item.cardData} isMobile={true} />
+                                    <InfoCard
+                                        {...item.cardData}
+                                        isMobile={true}
+                                        isExpanded={expandedCardId === item.id}
+                                        onToggle={() => handleToggle(item.id)}
+                                    />
                                 </div>
                             </div>
                         ))}

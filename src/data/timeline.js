@@ -40,14 +40,6 @@ export const timelineData = [
             details: ["High School Education"],
             tags: ["IB"],
             type: "education"
-          },
-          {
-            title: "MSc Telecommunication Engineering",
-            organization: "University of Oviedo",
-            period: "2005 - 2012",
-            details: ["Computer Science", "Physics, Electronics & Electromagnetism", "Telematics and Networking"],
-            tags: ["Telecommunications", "Engineering"],
-            type: "education"
           }
         ]
       },
@@ -61,6 +53,25 @@ export const timelineData = [
             period: "2010 - 2011",
             details: ["International experience in Italy"],
             tags: ["Erasmus", "Italy"],
+            type: "education"
+          }
+        ]
+      },
+      {
+        city: "Gijón",
+        image: gijonImg,
+        cards: [
+          {
+            title: "MSc Telecommunication Engineering",
+            organization: "University of Oviedo",
+            period: "2005 - 2012",
+            details: [
+              "Computer Science",
+              "Physics, Electronics & Electromagnetism",
+              "Telematics and Networking",
+              "Master Thesis & Specialization"
+            ],
+            tags: ["Telecommunications", "Engineering", "MSc", "BSc"],
             type: "education"
           }
         ]

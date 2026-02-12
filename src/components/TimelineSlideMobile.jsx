@@ -8,36 +8,29 @@ const TimelineSlideMobile = ({ data }) => {
         <section className={`${styles.section} ${styles.mobileSlide}`} id={data.id}>
             <Motion.div
                 className={`${styles.contentWrapper} ${styles.mobileWrapper}`}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ y: 50 }}
+                whileInView={{ y: 0 }}
+                viewport={{ once: true, amount: 0.1 }}
                 transition={{ duration: 0.5 }}
-                viewport={{ amount: 0.2 }}
             >
                 <div className={styles.mobileHeader}>
-                    <h2 className={`${styles.title} ${styles.mobileTitle}`}>{data.title}</h2>
-                    <h3 className={`${styles.subtitle} ${styles.mobileSubtitle}`}>{data.description}</h3>
+                    <h2 className={`${styles.title} ${styles.mobileTitle}`}>{data.header.title}</h2>
+                    <h3 className={`${styles.subtitle} ${styles.mobileSubtitle}`}>{data.header.subtitle}</h3>
                 </div>
 
-                {data.mobileCard && data.mobileCard.image && (
+                {data.image && (
                     <div className={styles.mobileImageContainer}>
                         <img
-                            src={data.mobileCard.image}
-                            alt={data.title}
-                            style={{
-                                maxWidth: '100%',
-                                maxHeight: '220px',
-                                width: 'auto',
-                                borderRadius: '16px',
-                                objectFit: 'contain',
-                                boxShadow: '0 10px 30px rgba(0,0,0,0.3)'
-                            }}
+                            src={data.image}
+                            alt={data.header.title}
+                            className={styles.mobileLocationImage}
                         />
                     </div>
                 )}
 
                 <div className={styles.mobileCardContainer}>
-                    {data.mobileCard && (
-                        <InfoCard {...data.mobileCard} isMobile={true} />
+                    {data.card && (
+                        <InfoCard {...data.card} isMobile={true} isExpanded={true} />
                     )}
                 </div>
             </Motion.div>

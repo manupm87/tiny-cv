@@ -83,6 +83,10 @@
     .intro-card {
         padding: 2rem;
         gap: 1.5rem;
+        width: 90vw;
+        max-width: 400px;
+        margin: 0 auto;
+        /* Center it */
     }
 
     .intro-title {

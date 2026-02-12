@@ -7,7 +7,7 @@ import BackgroundOrbs from './components/BackgroundOrbs';
 import useIsMobile from './hooks/useIsMobile';
 import { adaptTimelineData } from './utils/timelineUtils';
 
-import MobileGroupSlide from './components/MobileGroupSlide';
+import TimelineSlideMobile from './components/TimelineSlideMobile';
 import './styles/Timeline.css';
 
 function App() {
@@ -65,6 +65,10 @@ function App() {
     return () => observer.disconnect();
   }, [containerEl, slidesData]);
 
+  if (!slidesData || slidesData.length === 0) {
+    return <div style={{ color: 'white', textAlign: 'center', padding: '2rem' }}>Loading timeline...</div>;
+  }
+
   return (
     <div className="timeline-container" ref={containerRef}>
       {/* Global Background Elements */}
@@ -76,8 +80,8 @@ function App() {
         if (item.type === 'intro') {
           return <IntroSlide key={item.id} data={item} isActive={activeId === item.id} isMobile={isMobile} />;
         }
-        if (item.type === 'mobile-section-group') {
-          return <MobileGroupSlide key={item.id} data={item} />;
+        if (item.type === 'mobile-slide') {
+          return <TimelineSlideMobile key={item.id} data={item} />;
         }
         return <TimelineSlide key={item.id} data={item} index={index} isActive={activeId === item.id} isMobile={isMobile} />;
       })}
