@@ -9,18 +9,21 @@ const useIsMobile = (breakpoint = 768) => {
     });
 
     useEffect(() => {
-        const checkMobile = () => {
-            setIsMobile(window.innerWidth < breakpoint);
+        // Use matchMedia for better performance than resize listener
+        const mediaQuery = window.matchMedia(`(max-width: ${breakpoint - 1}px)`);
+
+        const handleChange = (e) => {
+            setIsMobile(e.matches);
         };
 
-        // Check on mount
-        checkMobile();
+        // Set initial value
+        setIsMobile(mediaQuery.matches);
 
         // Add event listener
-        window.addEventListener('resize', checkMobile);
+        mediaQuery.addEventListener('change', handleChange);
 
         // Cleanup
-        return () => window.removeEventListener('resize', checkMobile);
+        return () => mediaQuery.removeEventListener('change', handleChange);
     }, [breakpoint]);
 
     return isMobile;

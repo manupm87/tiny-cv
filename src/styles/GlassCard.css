@@ -16,7 +16,25 @@
     transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.4s ease;
     position: relative;
     overflow: hidden;
+    cursor: pointer;
+    min-height: 240px;
 }
+
+.glass-card.collapsed {
+    /* height: 240px; Removed to let content dictate size, using min-height on base class */
+    overflow: hidden;
+}
+
+.glass-card.expanded {
+    /* height: auto; */
+    max-height: 80vh;
+    /* Allow growing but constrained */
+    overflow-y: auto;
+    background: rgba(255, 255, 255, 0.15);
+    /* Slightly clearer when expanded */
+}
+
+/* .glass-card.collapsed .card-details rule removed as we handle it in JS now */
 
 /* Highlight flare on top */
 .glass-card::after {

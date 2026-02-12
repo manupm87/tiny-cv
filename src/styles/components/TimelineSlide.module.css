@@ -127,9 +127,10 @@
 }
 
 /* Mobile Specific Styles */
+/* Mobile Specific Styles */
 .mobileSlide {
     align-items: center;
-    padding: 1rem;
+    padding: 0;
     height: 100vh;
     height: 100dvh;
     scroll-snap-align: start;
@@ -140,38 +141,56 @@
 
 .mobileWrapper {
     height: 100%;
-    justify-content: space-evenly;
-    /* Distribute space */
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-rows: 15% 35% 35% 15%;
+    grid-template-areas:
+        "header"
+        "image"
+        "card"
+        "footer";
     align-items: center;
-    gap: 1rem;
-    padding: 1rem 0;
+    justify-items: center;
 }
 
 .mobileHeader {
+    grid-area: header;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
     text-align: center;
-    flex-shrink: 0;
-    margin-bottom: 0.5rem;
+    padding: 3vh 1rem 0 1rem;
+    z-index: 2;
 }
 
 .mobileTitle {
-    font-size: 2rem;
+    font-size: 1.8rem;
     line-height: 1.1;
+    margin: 0;
 }
 
 .mobileSubtitle {
-    font-size: 1.1rem;
+    font-size: 1rem;
     margin-top: 0.25rem;
+    margin-bottom: 0;
 }
 
 .mobileImageContainer {
+    grid-area: image;
     width: 100%;
+    height: 100%;
     display: flex;
     justify-content: center;
-    flex-shrink: 1;
-    /* Allow shrinking */
-    min-height: 0;
-    max-height: 35vh;
-    /* Limit height */
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+    padding: 1rem;
 }
 
 .mobileLocationImage {
@@ -184,26 +203,53 @@
 }
 
 .mobileCardContainer {
-    width: 90vw;
-    /* Fixed width relative to viewport */
-    max-width: 400px;
-    /* Max width for larger mobiles */
-    flex-shrink: 0;
+    grid-area: card;
+    width: 100%;
+    height: 100%;
     display: flex;
     justify-content: center;
-    /* Ensure card doesn't overflow the viewport if possible */
-    max-height: 45vh;
-    overflow-y: auto;
+    align-items: flex-end;
+    /* Align to bottom so it grows upwards */
+    padding: 1rem;
+    z-index: 5;
+    position: relative;
+    /* transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1); */
+    /* Handled by Framer Motion now */
 }
 
+.mobileCardContainer.expanded {
+    grid-row: 2 / 4;
+    /* Covers Image (2) and Card (3) areas */
+    z-index: 10;
+    align-items: flex-end;
+    /* Keep aligned to bottom */
+    background: transparent;
+    /* Remove background dimming if it interferes with glass look */
+    backdrop-filter: none;
+}
+
+/* Ensure the card itself takes full available space in the container or behaves appropriately */
 .mobileCardContainer>div {
     width: 100%;
+    max-width: 400px;
+    max-height: 100%;
+    overflow-y: auto;
+    /* Ensure the card content starts from the bottom if it's not full height? 
+       Actually, standard flex behavior with flex-end aligns the item to the bottom. 
+       If the item height grows, it grows upwards. 
+    */
 }
 
-/* Add padding to ensure content doesn't touch the very edges */
-.mobileCardContainer {
-    padding: 0 10px;
-    box-sizing: border-box;
+.mobileFooter {
+    grid-area: footer;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* Responsive */

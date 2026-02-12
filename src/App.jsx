@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { timelineData } from './data/timeline';
 import IntroSlide from './components/IntroSlide';
-import TimelineSlide from './components/TimelineSlide';
+import TimelineSlideDesktop from './components/TimelineSlideDesktop';
 import StoryNavigator from './components/StoryNavigator';
 import BackgroundOrbs from './components/BackgroundOrbs';
 import useIsMobile from './hooks/useIsMobile';
@@ -18,6 +18,7 @@ function App() {
 
   // We default to the first slide's ID
   const [activeId, setActiveId] = useState(slidesData[0].id);
+
   const [containerEl, setContainerEl] = useState(null);
 
   const containerRef = React.useCallback(node => {
@@ -28,17 +29,15 @@ function App() {
 
   const scrollContainerRef = React.useMemo(() => ({ current: containerEl }), [containerEl]);
 
-  useEffect(() => {
-    // Update activeId when slidesData changes to avoid stale IDs
-    if (slidesData.length > 0) {
-      // Optional: Reset to top or find the equivalent slide? 
-      // For simplicity, let's just ensure we have a valid ID.
-      // But if we switch views, scroll position might be weird.
-      // Let's rely on intersecting observer to catch up.
-    }
+  // Use ref to track slidesData without causing effect recreation
+  const slidesDataRef = React.useRef(slidesData);
+  React.useEffect(() => {
+    slidesDataRef.current = slidesData;
   }, [slidesData]);
 
   useEffect(() => {
+    if (!containerEl) return;
+
     const observerOptions = {
       root: containerEl,
       rootMargin: '0px',
@@ -55,7 +54,8 @@ function App() {
 
     const observer = new IntersectionObserver(observerCallback, observerOptions);
 
-    slidesData.forEach((section) => {
+    // Use ref to access current slidesData
+    slidesDataRef.current.forEach((section) => {
       const element = document.getElementById(section.id);
       if (element) {
         observer.observe(element);
@@ -63,7 +63,7 @@ function App() {
     });
 
     return () => observer.disconnect();
-  }, [containerEl, slidesData]);
+  }, [containerEl]); // Only recreate when container changes, not on slidesData changes
 
   if (!slidesData || slidesData.length === 0) {
     return <div style={{ color: 'white', textAlign: 'center', padding: '2rem' }}>Loading timeline...</div>;
@@ -81,9 +81,14 @@ function App() {
           return <IntroSlide key={item.id} data={item} isActive={activeId === item.id} isMobile={isMobile} />;
         }
         if (item.type === 'mobile-slide') {
-          return <TimelineSlideMobile key={item.id} data={item} />;
+          return (
+            <TimelineSlideMobile
+              key={item.id}
+              data={item}
+            />
+          );
         }
-        return <TimelineSlide key={item.id} data={item} index={index} isActive={activeId === item.id} isMobile={isMobile} />;
+        return <TimelineSlideDesktop key={item.id} data={item} index={index} />;
       })}
     </div>
   );

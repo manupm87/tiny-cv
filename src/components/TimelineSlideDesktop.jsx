@@ -53,7 +53,7 @@ const TimelineSlideDesktop = ({ data, index }) => {
                                 <div className={styles.locationCards}>
                                     <div className={styles.cardsList}>
                                         {location.cards.map((card, cardIndex) => (
-                                            <InfoCard key={cardIndex} {...card} />
+                                            <InfoCard key={cardIndex} {...card} isExpanded={true} />
                                         ))}
                                     </div>
                                 </div>

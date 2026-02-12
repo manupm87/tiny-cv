@@ -3,6 +3,14 @@ import bolognaImg from '../assets/images/bologna.png';
 import budapestImg from '../assets/images/budapest.png';
 import londonImg from '../assets/images/london.png';
 
+// Reusable location data to avoid duplication
+const LOCATIONS = {
+  gijon: { city: "Gijón", image: gijonImg },
+  bologna: { city: "Bologna", image: bolognaImg },
+  budapest: { city: "Budapest", image: budapestImg },
+  london: { city: "London", image: londonImg }
+};
+
 export const timelineData = [
   {
     id: "intro",
@@ -30,8 +38,7 @@ export const timelineData = [
     description: "Building the academic base.",
     locations: [
       {
-        city: "Gijón",
-        image: gijonImg,
+        ...LOCATIONS.gijon,
         cards: [
           {
             title: "International Baccalaureate",
@@ -44,8 +51,7 @@ export const timelineData = [
         ]
       },
       {
-        city: "Bologna",
-        image: bolognaImg,
+        ...LOCATIONS.bologna,
         cards: [
           {
             title: "ERASMUS Telecommunication Engineering",
@@ -58,8 +64,7 @@ export const timelineData = [
         ]
       },
       {
-        city: "Gijón",
-        image: gijonImg,
+        ...LOCATIONS.gijon,
         cards: [
           {
             title: "MSc Telecommunication Engineering",
@@ -87,8 +92,7 @@ export const timelineData = [
     description: "First steps in the professional world.",
     locations: [
       {
-        city: "Gijón",
-        image: gijonImg,
+        ...LOCATIONS.gijon,
         cards: [
           {
             title: "Software Engineer",
@@ -122,8 +126,7 @@ export const timelineData = [
     description: "Deep dive into research and telecommunications at Nokia Bell Labs.",
     locations: [
       {
-        city: "Budapest",
-        image: budapestImg,
+        ...LOCATIONS.budapest,
         cards: [
           {
             title: "Senior R&D Engineer",
@@ -151,8 +154,7 @@ export const timelineData = [
     description: "Scaling platforms in the financial hub of the world.",
     locations: [
       {
-        city: "London",
-        image: londonImg,
+        ...LOCATIONS.london,
         cards: [
           {
             title: "Cloud Platform Team Lead",
@@ -195,8 +197,7 @@ export const timelineData = [
     description: "Leading cloud architecture and expanding into AI.",
     locations: [
       {
-        city: "Gijón",
-        image: gijonImg,
+        ...LOCATIONS.gijon,
         cards: [
           {
             title: "Cloud Platform Engineer / Architect",
