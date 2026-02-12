@@ -26,7 +26,7 @@ const MobileGroupSlide = ({ data }) => {
          LOCATION BLOCKS
          Rendered sequentially. Each block contains an Image and Cards.
       */}
-            {data.locations.map((loc, locIndex) => (
+            {data.locations.map((loc) => (
                 <div key={loc.id} className="mobile-location-block">
 
                     {/* 
@@ -53,7 +53,7 @@ const MobileGroupSlide = ({ data }) => {
              Scrolls normally.
           */}
                     <div className="cards-list-container">
-                        {loc.items.map((item, index) => (
+                        {loc.items.map((item) => (
                             <div
                                 key={item.id}
                                 className="mobile-card-wrapper"

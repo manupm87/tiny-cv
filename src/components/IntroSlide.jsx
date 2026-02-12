@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion as Motion } from 'framer-motion';
 import { Github, Linkedin, Mail, Smartphone, Cloud, Server, Network } from 'lucide-react';
 import './../styles/IntroSlide.css';
 import './../styles/GlassCard.css';
@@ -9,7 +9,7 @@ const IntroSlide = ({ data }) => {
 
   return (
     <section className="timeline-section" id={data.id}>
-      <motion.div
+      <Motion.div
         className="glass-card intro-card"
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
@@ -59,7 +59,7 @@ const IntroSlide = ({ data }) => {
           ))}
         </div>
 
-      </motion.div>
+      </Motion.div>
     </section>
   );
 };

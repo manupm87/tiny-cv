@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion as Motion } from 'framer-motion';
 
 const StoryNavigator = ({ sections, activeId }) => {
   return (
@@ -66,7 +66,7 @@ const StoryNavigator = ({ sections, activeId }) => {
             </div>
 
             {/* Dot */}
-            <motion.div
+            <Motion.div
               animate={{
                 scale: isActive ? 1.5 : 1,
                 backgroundColor: isActive ? 'var(--primary-blue)' : 'var(--glass-border)',
