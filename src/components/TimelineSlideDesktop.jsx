@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion as Motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import InfoCard from './InfoCard';
 import styles from '../styles/components/TimelineSlide.module.css';
 
@@ -8,7 +8,7 @@ const TimelineSlideDesktop = ({ data, index }) => {
 
     return (
         <section className={styles.section} id={data.id}>
-            <Motion.div
+            <motion.div
                 className={styles.contentWrapper}
                 initial={{ opacity: 0, x: -50 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -61,7 +61,7 @@ const TimelineSlideDesktop = ({ data, index }) => {
                         );
                     })}
                 </div>
-            </Motion.div>
+            </motion.div>
         </section>
     );
 };

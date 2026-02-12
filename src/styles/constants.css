@@ -1,0 +1,72 @@
+/* ===================================
+   CSS Constants & Design Tokens
+   =================================== */
+
+/* Breakpoints - Mobile-first approach */
+:root {
+    --breakpoint-mobile: 768px;
+    --breakpoint-tablet: 1024px;
+}
+
+/* Animation Durations */
+:root {
+    --transition-instant: 0.2s;
+    --transition-fast: 0.3s;
+    --transition-normal: 0.5s;
+    --transition-slow: 0.8s;
+    --transition-very-slow: 1.2s;
+}
+
+/* Animation Easings */
+:root {
+    --ease-smooth: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --ease-in-out: ease-in-out;
+}
+
+/* Spacing */
+:root {
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    --spacing-2xl: 2.5rem;
+}
+
+/* Border Radius */
+:root {
+    --radius-sm: 12px;
+    --radius-md: 32px;
+    --radius-pill: 99px;
+    --radius-circle: 50%;
+}
+
+/* Blur Values */
+:root {
+    --blur-light: blur(10px);
+    --blur-medium: blur(24px);
+    --blur-heavy: blur(60px);
+    --blur-very-heavy: blur(80px);
+    --blur-extreme: blur(100px);
+}
+
+/* Z-Index Layers */
+:root {
+    --z-background: -1;
+    --z-base: 0;
+    --z-content: 1;
+    --z-elevated: 2;
+    --z-dropdown: 10;
+    --z-sticky: 20;
+    --z-modal: 50;
+    --z-popover: 100;
+    --z-tooltip: 200;
+}
+
+/* Shadow Depths */
+:root {
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.25);
+    --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.4);
+    --shadow-xl: 0 30px 50px rgba(0, 0, 0, 0.6);
+}

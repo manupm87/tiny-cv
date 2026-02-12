@@ -1,6 +1,12 @@
 import React from 'react';
-import { motion as Motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import '../styles/BackgroundOrbs.css';
 
+/**
+ * Animated background gradient orbs that move based on scroll position
+ * @param {Object} props
+ * @param {Object} props.scrollContainer - Ref to the scroll container for tracking scroll position
+ */
 const BackgroundOrbs = ({ scrollContainer }) => {
     const { scrollYProgress } = useScroll({
         container: scrollContainer
@@ -12,6 +18,7 @@ const BackgroundOrbs = ({ scrollContainer }) => {
         damping: 30,
         restDelta: 0.001
     });
+
     // We map scroll (0 to 1) to a series of random positions
     const scrollPoints = [0, 0.2, 0.4, 0.6, 0.8, 1];
 
@@ -28,74 +35,16 @@ const BackgroundOrbs = ({ scrollContainer }) => {
     const x3 = useTransform(smoothScroll, scrollPoints, ['0vw', '80vw', '10vw', '70vw', '-10vw', '50vw']);
     const rotate = useTransform(smoothScroll, [0, 1], [0, 360]);
 
-    const containerStyle = {
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        zIndex: -1,
-        overflow: 'hidden',
-        pointerEvents: 'none',
-    };
-
-    const orb1Style = {
-        position: 'absolute',
-        top: '-10%',
-        left: '-10%',
-        width: '60vw',
-        height: '60vw',
-        maxWidth: '800px',
-        maxHeight: '800px',
-        borderRadius: '50%',
-        filter: 'blur(80px)',
-        zIndex: -1,
-        y: y1,
-        x: x1,
-        rotate: rotate,
-        background: "radial-gradient(circle at center, rgba(56, 189, 248, 0.8) 0%, rgba(56, 189, 248, 0) 70%)",
-    };
-
-    const orb2Style = {
-        position: 'absolute',
-        bottom: '-10%',
-        right: '-10%',
-        width: '70vw',
-        height: '70vw',
-        maxWidth: '900px',
-        maxHeight: '900px',
-        borderRadius: '50%',
-        filter: 'blur(100px)',
-        zIndex: -1,
-        y: y2,
-        x: x2,
-        rotate: rotate,
-        background: "radial-gradient(circle at center, rgba(192, 132, 252, 0.8) 0%, rgba(192, 132, 252, 0) 70%)",
-    };
-
-    const orb3Style = {
-        position: 'absolute',
-        top: '40%',
-        left: '20%',
-        width: '40vw',
-        height: '40vw',
-        maxWidth: '600px',
-        maxHeight: '600px',
-        borderRadius: '50%',
-        filter: 'blur(60px)',
-        zIndex: -1,
-        y: y3,
-        x: x3,
-        rotate: rotate,
-        background: "radial-gradient(circle at center, rgba(56, 189, 248, 0.6) 0%, rgba(192, 132, 252, 0.2) 100%)",
-    };
-
-
     return (
-        <div style={containerStyle}>
+        <div className="orbContainer">
             {/* Orb 1: Primary Blue - Top Left */}
-            <Motion.div
-                style={orb1Style}
+            <motion.div
+                className="orb orb1"
+                style={{
+                    y: y1,
+                    x: x1,
+                    rotate: rotate,
+                }}
                 animate={{
                     scale: [1, 1.1, 1],
                     opacity: [0.5, 0.7, 0.5],
@@ -108,8 +57,13 @@ const BackgroundOrbs = ({ scrollContainer }) => {
             />
 
             {/* Orb 2: Secondary Purple - Bottom Right */}
-            <Motion.div
-                style={orb2Style}
+            <motion.div
+                className="orb orb2"
+                style={{
+                    y: y2,
+                    x: x2,
+                    rotate: rotate,
+                }}
                 animate={{
                     scale: [1, 1.2, 1],
                     opacity: [0.4, 0.6, 0.4],
@@ -123,8 +77,13 @@ const BackgroundOrbs = ({ scrollContainer }) => {
             />
 
             {/* Orb 3: Accent/Highlight - Middle Left-ish */}
-            <Motion.div
-                style={orb3Style}
+            <motion.div
+                className="orb orb3"
+                style={{
+                    y: y3,
+                    x: x3,
+                    rotate: rotate,
+                }}
                 animate={{
                     scale: [1, 1.15, 0.9, 1],
                     opacity: [0.2, 0.4, 0.2],

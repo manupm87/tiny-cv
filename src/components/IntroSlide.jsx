@@ -1,19 +1,23 @@
 import React from 'react';
-import { motion as Motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Github, Linkedin, Mail, Smartphone, Cloud, Server, Network } from 'lucide-react';
 import './../styles/IntroSlide.css';
 import './../styles/GlassCard.css';
+import { SCALE_IN } from '../utils/animations';
 
+/**
+ * Intro slide displaying personal information and contact details
+ * @param {Object} props
+ * @param {Object} props.data - Slide data including title, content, and social links
+ */
 const IntroSlide = ({ data }) => {
   const { content } = data;
 
   return (
     <section className="timeline-section" id={data.id}>
-      <Motion.div
+      <motion.div
         className="glass-card intro-card"
-        initial={{ scale: 0.9 }}
-        animate={{ scale: 1 }}
-        transition={{ duration: 0.8 }}
+        {...SCALE_IN}
       >
 
         <div className="intro-icons">
@@ -59,7 +63,7 @@ const IntroSlide = ({ data }) => {
           ))}
         </div>
 
-      </Motion.div>
+      </motion.div>
     </section>
   );
 };

@@ -1,18 +1,21 @@
 import React, { useState } from 'react';
-import { motion as Motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import InfoCard from './InfoCard';
 import styles from '../styles/components/TimelineSlide.module.css';
+import { FADE_IN } from '../utils/animations';
 
+/**
+ * Mobile version of timeline slide with accordion-style card expansion
+ * @param {Object} props
+ * @param {Object} props.data - Slide data including header, image, and card content
+ */
 const TimelineSlideMobile = ({ data }) => {
     const [isExpanded, setIsExpanded] = useState(false);
     return (
         <section className={`${styles.section} ${styles.mobileSlide}`} id={data.id}>
-            <Motion.div
+            <motion.div
                 className={`${styles.contentWrapper} ${styles.mobileWrapper}`}
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true, amount: 0.1 }}
-                transition={{ duration: 0.5 }}
+                {...FADE_IN}
             >
                 <div className={styles.mobileHeader}>
                     <h2 className={`${styles.title} ${styles.mobileTitle}`}>{data.header.title}</h2>
@@ -44,7 +47,7 @@ const TimelineSlideMobile = ({ data }) => {
                     {/* Footer component - customized later */}
                     <span>↓ Scroll for more</span>
                 </div>
-            </Motion.div>
+            </motion.div>
         </section>
     );
 };
