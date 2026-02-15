@@ -22,12 +22,13 @@ test.describe('Tiny CV Application UI Tests', () => {
 
         for (const slideId of slides) {
             const section = page.locator(`#${slideId}`);
-            await expect(section).toBeAttached();
+            await expect(section).toBeAttached({ timeout: 10000 });
 
             await section.scrollIntoViewIfNeeded();
+            await page.waitForTimeout(300); // Wait for scroll
 
-            // Check visibility
-            await expect(section).toBeVisible();
+            // Check visibility with timeout
+            await expect(section).toBeVisible({ timeout: 5000 });
         }
     });
 

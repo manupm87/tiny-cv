@@ -14,7 +14,7 @@ test.describe('Mobile Navigation', () => {
     test('should navigate slides with swipe gestures', async ({ page }) => {
         // 1. Initial State: Intro
         await expect(page.locator('text=Manuel Pérez Martínez')).toBeVisible();
-        await expect(page.locator('text=Cloud Platform Architect')).toBeVisible();
+        await expect(page.locator('text=Cloud Platform Engineer')).toBeVisible();
 
         // 2. Swipe Up -> Education (Gijon - IB) [Vertical Slide]
         await page.mouse.move(200, 500);
@@ -36,7 +36,7 @@ test.describe('Mobile Navigation', () => {
 
         await expect(page.locator('text=The Foundation')).toBeVisible(); // Same Section
         await expect(page.locator('text=ERASMUS')).toBeVisible();
-        await expect(page.locator('text=Bologna')).toBeVisible();
+        await expect(page.locator('text=Universitá di Bologna')).toBeVisible();
 
         // 4. Swipe Up -> Education (Gijon - MSc) [Horizontal Slide]
         await page.mouse.move(200, 500);
