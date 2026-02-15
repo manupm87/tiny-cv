@@ -4,6 +4,7 @@ import IntroSlide from './components/IntroSlide';
 import TimelineSlideDesktop from './components/TimelineSlideDesktop';
 import StoryNavigator from './components/StoryNavigator';
 import BackgroundOrbs from './components/BackgroundOrbs';
+import ErrorBoundary from './components/ErrorBoundary';
 import useIsMobile from './hooks/useIsMobile';
 import MobileTimelineContainer from './components/MobileTimelineContainer';
 import './styles/Timeline.css';
@@ -49,23 +50,34 @@ function App() {
   }, [containerRef.current, isMobile]);
 
   if (isMobile) {
-    return <MobileTimelineContainer timelineData={timelineData} />;
+    return (
+      <ErrorBoundary fallbackMessage="Something went wrong with the mobile view.">
+        <MobileTimelineContainer timelineData={timelineData} />
+      </ErrorBoundary>
+    );
   }
 
   return (
-    <div className="timeline-container" ref={containerRef}>
-      {/* Global Background Elements */}
-      <BackgroundOrbs scrollContainer={containerRef} />
+    <ErrorBoundary fallbackMessage="Something went wrong loading the timeline.">
+      <div className="timeline-container" ref={containerRef}>
+        {/* Global Background Elements */}
+        <ErrorBoundary fallbackMessage="Background animation failed to load." showReset>
+          <BackgroundOrbs scrollContainer={containerRef} />
+        </ErrorBoundary>
 
-      <StoryNavigator sections={slidesData} activeId={activeId} />
+        <StoryNavigator sections={slidesData} activeId={activeId} />
 
-      {slidesData.map((item, index) => {
-        if (item.type === 'intro') {
-          return <IntroSlide key={item.id} data={item} />;
-        }
-        return <TimelineSlideDesktop key={item.id} data={item} index={index} />;
-      })}
-    </div>
+        {slidesData.map((item, index) => (
+          <ErrorBoundary key={item.id} fallbackMessage={`Failed to load ${item.title}`} showReset>
+            {item.type === 'intro' ? (
+              <IntroSlide data={item} />
+            ) : (
+              <TimelineSlideDesktop data={item} index={index} />
+            )}
+          </ErrorBoundary>
+        ))}
+      </div>
+    </ErrorBoundary>
   );
 }
 

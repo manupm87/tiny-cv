@@ -1,88 +1,141 @@
 /**
- * Helper to get the next valid indices in the hierarchy
- * Hierarchy: Section -> Location -> Card
- * 
- * @param {Object} indices { sectionIndex, locationIndex, cardIndex }
- * @param {Array} timelineData 
- * @returns {Object|null} New indices or null if at end
+ * Timeline Navigation Helpers
+ * Unified navigation logic for timeline hierarchy: Section -> Location -> Card
  */
-export const getNextIndices = (indices, timelineData) => {
+
+/**
+ * Check if a card index is valid within a location
+ */
+const isValidCard = (sectionIndex, locationIndex, cardIndex, timelineData) => {
+    const section = timelineData[sectionIndex];
+    if (!section || section.type === 'intro') return false;
+
+    const location = section.locations?.[locationIndex];
+    if (!location?.cards) return false;
+
+    return cardIndex >= 0 && cardIndex < location.cards.length;
+};
+
+/**
+ * Check if a location index is valid within a section
+ */
+const isValidLocation = (sectionIndex, locationIndex, timelineData) => {
+    const section = timelineData[sectionIndex];
+    if (!section || section.type === 'intro') return false;
+
+    const locations = section.locations || [];
+    return locationIndex >= 0 && locationIndex < locations.length;
+};
+
+/**
+ * Check if a section index is valid
+ */
+const isValidSection = (sectionIndex, timelineData) => {
+    return sectionIndex >= 0 && sectionIndex < timelineData.length;
+};
+
+/**
+ * Get the last card index for a location
+ */
+const getLastCardIndex = (sectionIndex, locationIndex, timelineData) => {
+    const section = timelineData[sectionIndex];
+    if (!section || section.type === 'intro') return 0;
+
+    const location = section.locations?.[locationIndex];
+    if (!location?.cards) return 0;
+
+    return Math.max(0, location.cards.length - 1);
+};
+
+/**
+ * Get indices for entering a section based on direction
+ */
+const getIndicesForSection = (sectionIndex, direction, timelineData) => {
+    const section = timelineData[sectionIndex];
+
+    // Intro sections have no locations/cards
+    if (section.type === 'intro') {
+        return { sectionIndex, locationIndex: 0, cardIndex: 0 };
+    }
+
+    const locations = section.locations || [];
+
+    if (direction > 0) {
+        // Moving forward: start at first location, first card
+        return { sectionIndex, locationIndex: 0, cardIndex: 0 };
+    } else {
+        // Moving backward: start at last location, last card
+        const lastLocIndex = Math.max(0, locations.length - 1);
+        const lastCardIdx = getLastCardIndex(sectionIndex, lastLocIndex, timelineData);
+        return { sectionIndex, locationIndex: lastLocIndex, cardIndex: lastCardIdx };
+    }
+};
+
+/**
+ * Unified navigation function for timeline hierarchy
+ * @param {Object} indices - Current { sectionIndex, locationIndex, cardIndex }
+ * @param {number} direction - 1 for next, -1 for previous
+ * @param {Array} timelineData - Timeline data array
+ * @returns {Object|null} New indices or null if boundary reached
+ */
+export const navigateTimeline = (indices, direction, timelineData) => {
     const { sectionIndex, locationIndex, cardIndex } = indices;
     const currentSection = timelineData[sectionIndex];
 
     // Safety check
     if (!currentSection) return null;
 
-    // A section might be an 'intro' type (no locations/cards usually, or just treated as one step)
-    // If it's an intro section and we are at it, we move to next section
+    // Handle intro sections specially
     if (currentSection.type === 'intro') {
-        const nextSecIndex = sectionIndex + 1;
-        if (nextSecIndex < timelineData.length) {
-            return { sectionIndex: nextSecIndex, locationIndex: 0, cardIndex: 0 };
+        const newSectionIndex = sectionIndex + direction;
+        if (isValidSection(newSectionIndex, timelineData)) {
+            return getIndicesForSection(newSectionIndex, direction, timelineData);
         }
-        return null; // End of timeline
+        return null;
     }
 
-    // Normal Section with Locations
-    const locations = currentSection.locations || [];
-    const currentLocation = locations[locationIndex];
-
-    // Check if we can move to next CARD in same location
-    if (currentLocation && currentLocation.cards && cardIndex < currentLocation.cards.length - 1) {
-        return { ...indices, cardIndex: cardIndex + 1 };
+    // Try navigating at CARD level
+    const newCardIndex = cardIndex + direction;
+    if (isValidCard(sectionIndex, locationIndex, newCardIndex, timelineData)) {
+        return { sectionIndex, locationIndex, cardIndex: newCardIndex };
     }
 
-    // Check if we can move to next LOCATION in same section
-    if (locationIndex < locations.length - 1) {
-        return { sectionIndex, locationIndex: locationIndex + 1, cardIndex: 0 };
+    // Try navigating at LOCATION level
+    const newLocationIndex = locationIndex + direction;
+    if (isValidLocation(sectionIndex, newLocationIndex, timelineData)) {
+        const cardIdx = direction > 0 ? 0 : getLastCardIndex(sectionIndex, newLocationIndex, timelineData);
+        return { sectionIndex, locationIndex: newLocationIndex, cardIndex: cardIdx };
     }
 
-    // Check if we can move to next SECTION
-    if (sectionIndex < timelineData.length - 1) {
-        return { sectionIndex: sectionIndex + 1, locationIndex: 0, cardIndex: 0 };
+    // Try navigating at SECTION level
+    const newSectionIndex = sectionIndex + direction;
+    if (isValidSection(newSectionIndex, timelineData)) {
+        return getIndicesForSection(newSectionIndex, direction, timelineData);
     }
 
-    return null; // Reached the very end
+    return null; // Boundary reached
+};
+
+/**
+ * Helper to get the next valid indices in the hierarchy
+ * Maintained for backward compatibility
+ * 
+ * @param {Object} indices { sectionIndex, locationIndex, cardIndex }
+ * @param {Array} timelineData 
+ * @returns {Object|null} New indices or null if at end
+ */
+export const getNextIndices = (indices, timelineData) => {
+    return navigateTimeline(indices, 1, timelineData);
 };
 
 /**
  * Helper to get previous indices
+ * Maintained for backward compatibility
+ * 
+ * @param {Object} indices { sectionIndex, locationIndex, cardIndex }
+ * @param {Array} timelineData 
+ * @returns {Object|null} New indices or null if at beginning
  */
 export const getPrevIndices = (indices, timelineData) => {
-    const { sectionIndex, locationIndex, cardIndex } = indices;
-
-    // Check if we can move to prev CARD in same location
-    if (cardIndex > 0) {
-        return { ...indices, cardIndex: cardIndex - 1 };
-    }
-
-    // Check if we can move to prev LOCATION in same section
-    if (locationIndex > 0) {
-        const prevLocationIndex = locationIndex - 1;
-        const prevLocation = timelineData[sectionIndex].locations[prevLocationIndex];
-        // Move to the LAST card of the previous location
-        const lastCardIndex = prevLocation.cards ? prevLocation.cards.length - 1 : 0;
-        return { sectionIndex, locationIndex: prevLocationIndex, cardIndex: lastCardIndex };
-    }
-
-    // Check if we can move to prev SECTION
-    if (sectionIndex > 0) {
-        const prevSectionIndex = sectionIndex - 1;
-        const prevSection = timelineData[prevSectionIndex];
-
-        if (prevSection.type === 'intro') {
-            return { sectionIndex: prevSectionIndex, locationIndex: 0, cardIndex: 0 };
-        }
-
-        // Move to LAST location of prev section
-        const locations = prevSection.locations || [];
-        const lastLocIndex = locations.length > 0 ? locations.length - 1 : 0;
-        const lastLoc = locations[lastLocIndex];
-        // Move to LAST card of that location
-        const lastCardIdx = lastLoc && lastLoc.cards ? lastLoc.cards.length - 1 : 0;
-
-        return { sectionIndex: prevSectionIndex, locationIndex: lastLocIndex, cardIndex: lastCardIdx };
-    }
-
-    return null; // At the very beginning
+    return navigateTimeline(indices, -1, timelineData);
 };
