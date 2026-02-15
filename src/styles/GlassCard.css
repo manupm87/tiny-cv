@@ -192,3 +192,30 @@
         font-size: 0.75rem;
     }
 }
+
+/* Expand Indicator - shows cards are clickable */
+.expand-indicator {
+    position: absolute;
+    bottom: 1.25rem;
+    right: 1.25rem;
+    color: var(--primary-blue);
+    opacity: 0.6;
+    transition: opacity var(--transition-fast);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.glass-card:hover .expand-indicator {
+    opacity: 1;
+}
+
+/* Enhanced hover state for better affordance */
+.glass-card[role="button"]:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+    border-color: rgba(56, 189, 248, 0.4);
+}
+
+.glass-card[role="button"]:active {
+    transform: translateY(-2px);
+}

@@ -11,6 +11,7 @@ import { FADE_IN } from '../utils/animations';
  */
 const TimelineSlideMobile = ({ data }) => {
     const [isExpanded, setIsExpanded] = useState(false);
+
     return (
         <section className={`${styles.section} ${styles.mobileSlide}`} id={data.id}>
             <motion.div

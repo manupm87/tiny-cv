@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import './../styles/GlassCard.css';
 import { FADE_UP, EXPAND_HEIGHT } from '../utils/animations';
 
@@ -62,6 +63,17 @@ const InfoCard = ({ title, organization, period, details, tags, type, isExpanded
             </span>
           ))}
         </div>
+      )}
+
+      {/* Expand indicator - shows clickability */}
+      {onClick && (
+        <motion.div
+          className="expand-indicator"
+          animate={{ y: [0, 5, 0] }}
+          transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
+        >
+          {isExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+        </motion.div>
       )}
     </motion.div>
   );

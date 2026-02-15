@@ -74,7 +74,7 @@ function App() {
       {/* Global Background Elements */}
       {containerEl && <BackgroundOrbs scrollContainer={scrollContainerRef} />}
 
-      {!isMobile && <StoryNavigator sections={timelineData} activeId={activeId} />}
+      {!isMobile && <StoryNavigator sections={slidesData} activeId={activeId} />}
 
       {slidesData.map((item, index) => {
         if (item.type === 'intro') {

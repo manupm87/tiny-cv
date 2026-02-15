@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Github, Linkedin, Mail, Smartphone, Cloud, Server, Network } from 'lucide-react';
+import ScrollHint from './ScrollHint';
 import './../styles/IntroSlide.css';
 import './../styles/GlassCard.css';
 import { SCALE_IN } from '../utils/animations';
@@ -64,6 +65,9 @@ const IntroSlide = ({ data }) => {
         </div>
 
       </motion.div>
+
+      {/* Scroll hint - indicates more content below */}
+      <ScrollHint />
     </section>
   );
 };
