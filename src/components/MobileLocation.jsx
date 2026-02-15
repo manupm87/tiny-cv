@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import PropTypes from 'prop-types';
 import InfoCard from './InfoCard';
 import styles from '../styles/components/MobileTimelineContainer.module.css';
 import { HORIZONTAL_SLIDE } from '../utils/animations';
@@ -57,6 +58,20 @@ const MobileLocation = ({ locationData, currentCardIndex, direction = 1 }) => {
             </div>
         </div>
     );
+};
+
+MobileLocation.propTypes = {
+    locationData: PropTypes.shape({
+        city: PropTypes.string,
+        image: PropTypes.string,
+        cards: PropTypes.array.isRequired,
+    }).isRequired,
+    currentCardIndex: PropTypes.number.isRequired,
+    direction: PropTypes.number,
+};
+
+MobileLocation.defaultProps = {
+    direction: 1,
 };
 
 export default MobileLocation;

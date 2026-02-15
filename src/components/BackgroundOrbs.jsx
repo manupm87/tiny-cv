@@ -1,11 +1,12 @@
 import React from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import PropTypes from 'prop-types';
 import '../styles/BackgroundOrbs.css';
 
 /**
  * Animated background gradient orbs that move based on scroll position
  * @param {Object} props
- * @param {Object} props.scrollContainer - Ref to the scroll container for tracking scroll position
+ * @param {React.RefObject} props.scrollContainer - Ref to the scroll container for tracking scroll position
  */
 const BackgroundOrbs = ({ scrollContainer }) => {
     const { scrollYProgress } = useScroll({
@@ -97,6 +98,12 @@ const BackgroundOrbs = ({ scrollContainer }) => {
             />
         </div>
     );
+};
+
+BackgroundOrbs.propTypes = {
+    scrollContainer: PropTypes.shape({
+        current: PropTypes.instanceOf(Element)
+    }),
 };
 
 export default BackgroundOrbs;

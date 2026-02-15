@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import PropTypes from 'prop-types';
 import MobileSection from './MobileSection';
 import { getNextIndices, getPrevIndices } from '../utils/timelineHelpers';
 import styles from '../styles/components/MobileTimelineContainer.module.css';
@@ -83,6 +84,16 @@ const MobileTimelineContainer = ({ timelineData }) => {
             </motion.div>
         </div>
     );
+};
+
+MobileTimelineContainer.propTypes = {
+    timelineData: PropTypes.arrayOf(
+        PropTypes.shape({
+            id: PropTypes.string.isRequired,
+            type: PropTypes.string,
+            locations: PropTypes.array,
+        })
+    ).isRequired,
 };
 
 export default MobileTimelineContainer;

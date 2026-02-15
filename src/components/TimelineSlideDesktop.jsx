@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import PropTypes from 'prop-types';
 import InfoCard from './InfoCard';
 import styles from '../styles/components/TimelineSlide.module.css';
 
@@ -64,6 +65,23 @@ const TimelineSlideDesktop = ({ data, index }) => {
             </motion.div>
         </section>
     );
+};
+
+TimelineSlideDesktop.propTypes = {
+    data: PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        title: PropTypes.string.isRequired,
+        location: PropTypes.string,
+        description: PropTypes.string,
+        locations: PropTypes.arrayOf(
+            PropTypes.shape({
+                city: PropTypes.string,
+                image: PropTypes.string,
+                cards: PropTypes.arrayOf(PropTypes.object).isRequired,
+            })
+        ),
+    }).isRequired,
+    index: PropTypes.number.isRequired,
 };
 
 export default TimelineSlideDesktop;

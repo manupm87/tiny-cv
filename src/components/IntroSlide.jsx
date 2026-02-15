@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Github, Linkedin, Mail, Smartphone, Cloud, Server, Network } from 'lucide-react';
+import PropTypes from 'prop-types';
 import './../styles/GlassCard.css';
 import './../styles/IntroSlide.css';
 import { SCALE_IN } from '../utils/animations';
@@ -67,6 +68,25 @@ const IntroSlide = ({ data }) => {
 
     </section>
   );
+};
+
+IntroSlide.propTypes = {
+  data: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    content: PropTypes.shape({
+      role: PropTypes.string.isRequired,
+      email: PropTypes.string.isRequired,
+      mobile: PropTypes.string.isRequired,
+      summary: PropTypes.string.isRequired,
+      socials: PropTypes.arrayOf(
+        PropTypes.shape({
+          name: PropTypes.string.isRequired,
+          url: PropTypes.string.isRequired,
+        })
+      ).isRequired,
+    }).isRequired,
+  }).isRequired,
 };
 
 export default IntroSlide;

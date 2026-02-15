@@ -25,4 +25,40 @@
 
     /* Interaction Thresholds */
     --swipe-threshold: 50px;
+
+    /* Common Spacing */
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 1.5rem;
+    --spacing-lg: 2rem;
+    --spacing-xl: 2.5rem;
+    --spacing-2xl: 4rem;
+
+    /* Border Radius */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 32px;
+    --radius-circle: 99px;
+
+    /* Common Sizes */
+    --min-card-height: 240px;
+    --max-card-height: 80vh;
+    --max-content-width: 800px;
+    --max-section-width: 1200px;
+
+    /* Font Sizes */
+    --font-xs: 0.75rem;
+    --font-sm: 0.9rem;
+    --font-base: 1rem;
+    --font-lg: 1.1rem;
+    --font-xl: 1.4rem;
+    --font-2xl: 1.5rem;
+    --font-3xl: 2.5rem;
+    --font-4xl: 3.5rem;
+    --font-5xl: 4rem;
+
+    /* Common Transitions */
+    --hover-lift: translateY(-4px);
+    --hover-lift-sm: translateY(-2px);
+    --hover-lift-lg: translateY(-10px);
 }

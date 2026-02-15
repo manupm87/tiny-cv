@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, ChevronUp } from 'lucide-react';
+import PropTypes from 'prop-types';
 import './../styles/GlassCard.css';
 import { FADE_UP, EXPAND_HEIGHT } from '../utils/animations';
 
@@ -78,6 +79,27 @@ const InfoCard = ({ title, organization, period, details, tags, type, isExpanded
       )}
     </motion.div>
   );
+};
+
+InfoCard.propTypes = {
+  title: PropTypes.string.isRequired,
+  organization: PropTypes.string.isRequired,
+  period: PropTypes.string.isRequired,
+  details: PropTypes.arrayOf(PropTypes.string),
+  tags: PropTypes.arrayOf(PropTypes.string),
+  type: PropTypes.oneOf(['job', 'education']),
+  isExpanded: PropTypes.bool,
+  onClick: PropTypes.func,
+  location: PropTypes.string,
+};
+
+InfoCard.defaultProps = {
+  details: [],
+  tags: [],
+  type: 'job',
+  isExpanded: false,
+  onClick: null,
+  location: null,
 };
 
 export default InfoCard;

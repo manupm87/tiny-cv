@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import PropTypes from 'prop-types';
 import MobileLocation from './MobileLocation';
 import IntroSlide from './IntroSlide';
 import styles from '../styles/components/MobileTimelineContainer.module.css';
@@ -48,6 +49,22 @@ const MobileSection = ({ sectionData, locationIndex, cardIndex, direction }) => 
             </div>
         </div>
     );
+};
+
+MobileSection.propTypes = {
+    sectionData: PropTypes.shape({
+        type: PropTypes.string,
+        title: PropTypes.string,
+        description: PropTypes.string,
+        locations: PropTypes.array,
+    }).isRequired,
+    locationIndex: PropTypes.number.isRequired,
+    cardIndex: PropTypes.number.isRequired,
+    direction: PropTypes.number,
+};
+
+MobileSection.defaultProps = {
+    direction: 1,
 };
 
 export default MobileSection;

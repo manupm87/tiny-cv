@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import PropTypes from 'prop-types';
 import '../styles/StoryNavigator.css';
 
 /**
@@ -44,6 +45,17 @@ const StoryNavigator = ({ sections, activeId }) => {
       })}
     </div>
   );
+};
+
+StoryNavigator.propTypes = {
+  sections: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      period: PropTypes.string,
+      title: PropTypes.string,
+    })
+  ).isRequired,
+  activeId: PropTypes.string.isRequired,
 };
 
 export default StoryNavigator;
