@@ -1,9 +1,16 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Github, Linkedin, Mail, Smartphone, Cloud, Server, Network } from 'lucide-react';
+// import { Github, Linkedin, Mail, Smartphone, Cloud, Server, Network } from 'lucide-react';
+import Github from 'lucide-react/dist/esm/icons/github';
+import Linkedin from 'lucide-react/dist/esm/icons/linkedin';
+import Mail from 'lucide-react/dist/esm/icons/mail';
+import Smartphone from 'lucide-react/dist/esm/icons/smartphone';
+import Cloud from 'lucide-react/dist/esm/icons/cloud';
+import Server from 'lucide-react/dist/esm/icons/server';
+import Network from 'lucide-react/dist/esm/icons/network';
 import ScrollHint from './ScrollHint';
-import './../styles/IntroSlide.css';
 import './../styles/GlassCard.css';
+import './../styles/IntroSlide.css';
 import { SCALE_IN } from '../utils/animations';
 
 /**

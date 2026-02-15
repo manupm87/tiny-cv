@@ -15,18 +15,27 @@ export const adaptTimelineData = (data, isMobile) => {
 
     data.forEach(section => {
         if (section.type === 'intro') {
-            flattenedData.push(section);
+            flattenedData.push({
+                ...section,
+                sectionId: section.id,
+                locationId: 'intro-loc', // Placeholder for intro
+                stepId: section.id
+            });
             return;
         }
 
         // Logic for 'slide' types which have 'locations' and 'cards'
         if (section.locations && section.locations.length > 0) {
             section.locations.forEach((location, locIndex) => {
+                const locationId = `${section.id}-loc-${locIndex}`;
                 // For each card in the location, create a full slide
                 location.cards.forEach((card, cardIndex) => {
                     flattenedData.push({
                         id: `${section.id}-${locIndex}-${cardIndex}`,
-                        type: 'mobile-slide',
+                        stepId: `${section.id}-${locIndex}-${cardIndex}`,
+                        sectionId: section.id,
+                        locationId: locationId,
+                        type: 'mobile-step', // Changed type to distinguish
                         header: {
                             title: section.title,
                             subtitle: section.description,
@@ -37,8 +46,13 @@ export const adaptTimelineData = (data, isMobile) => {
                 });
             });
         } else {
-            // Fallback for sections without locations (if any)
-            flattenedData.push(section);
+            // Fallback for sections without locations
+            flattenedData.push({
+                ...section,
+                sectionId: section.id,
+                locationId: `${section.id}-main`,
+                stepId: section.id
+            });
         }
     });
 

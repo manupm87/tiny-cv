@@ -7,14 +7,14 @@ import BackgroundOrbs from './components/BackgroundOrbs';
 import useIsMobile from './hooks/useIsMobile';
 import { adaptTimelineData } from './utils/timelineUtils';
 
-import TimelineSlideMobile from './components/TimelineSlideMobile';
+import MobileTimelineContainer from './components/MobileTimelineContainer';
 import './styles/Timeline.css';
 
 function App() {
   const isMobile = useIsMobile();
 
   // Adapt data for mobile if needed
-  const slidesData = useMemo(() => adaptTimelineData(timelineData, isMobile), [isMobile]);
+  const slidesData = useMemo(() => adaptTimelineData(timelineData, isMobile), [isMobile, timelineData]);
 
   // We default to the first slide's ID
   const [activeId, setActiveId] = useState(slidesData[0].id);
@@ -36,7 +36,7 @@ function App() {
   }, [slidesData]);
 
   useEffect(() => {
-    if (!containerEl) return;
+    if (!containerEl || isMobile) return;
 
     const observerOptions = {
       root: containerEl,
@@ -63,10 +63,14 @@ function App() {
     });
 
     return () => observer.disconnect();
-  }, [containerEl]); // Only recreate when container changes, not on slidesData changes
+  }, [containerEl, isMobile]); // Only recreate when container changes, not on slidesData changes
 
   if (!slidesData || slidesData.length === 0) {
     return <div style={{ color: 'white', textAlign: 'center', padding: '2rem' }}>Loading timeline...</div>;
+  }
+
+  if (isMobile) {
+    return <MobileTimelineContainer timelineData={timelineData} />;
   }
 
   return (
@@ -74,19 +78,11 @@ function App() {
       {/* Global Background Elements */}
       {containerEl && <BackgroundOrbs scrollContainer={scrollContainerRef} />}
 
-      {!isMobile && <StoryNavigator sections={slidesData} activeId={activeId} />}
+      <StoryNavigator sections={slidesData} activeId={activeId} />
 
       {slidesData.map((item, index) => {
         if (item.type === 'intro') {
           return <IntroSlide key={item.id} data={item} isActive={activeId === item.id} isMobile={isMobile} />;
-        }
-        if (item.type === 'mobile-slide') {
-          return (
-            <TimelineSlideMobile
-              key={item.id}
-              data={item}
-            />
-          );
         }
         return <TimelineSlideDesktop key={item.id} data={item} index={index} />;
       })}

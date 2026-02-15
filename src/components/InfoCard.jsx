@@ -1,22 +1,11 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import ChevronDown from 'lucide-react/dist/esm/icons/chevron-down';
+import ChevronUp from 'lucide-react/dist/esm/icons/chevron-up';
 import './../styles/GlassCard.css';
 import { FADE_UP, EXPAND_HEIGHT } from '../utils/animations';
 
-/**
- * InfoCard component displaying job or education information
- * @param {Object} props
- * @param {string} props.title - Card title
- * @param {string} props.organization - Organization name
- * @param {string} props.period - Time period
- * @param {string[]} props.details - Detailed description items
- * @param {string[]} props.tags - Technology/skill tags
- * @param {string} props.type - Card type ('job' or 'education')
- * @param {boolean} props.isExpanded - Whether card is expanded
- * @param {Function} props.onClick - Click handler for expansion
- */
-const InfoCard = ({ title, organization, period, details, tags, type, isExpanded, onClick }) => {
+const InfoCard = ({ title, organization, period, details, tags, type, isExpanded, onClick, location }) => {
   // Handle keyboard navigation
   const handleKeyDown = (e) => {
     if (onClick && (e.key === 'Enter' || e.key === ' ')) {
@@ -45,6 +34,19 @@ const InfoCard = ({ title, organization, period, details, tags, type, isExpanded
               {...EXPAND_HEIGHT}
               style={{ overflow: "hidden" }}
             >
+              {location && (
+                <div className="card-location" style={{
+                  fontSize: '1rem',
+                  fontWeight: '600',
+                  marginBottom: '1rem',
+                  color: 'var(--text-secondary)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem'
+                }}>
+                  <span>📍 {location}</span>
+                </div>
+              )}
               <ul className="card-details">
                 {details && details.map((detail, idx) => (
                   <li key={idx}>{detail}</li>

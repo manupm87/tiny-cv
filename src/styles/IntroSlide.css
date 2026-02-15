@@ -87,6 +87,8 @@
         max-width: 400px;
         margin: 0 auto;
         /* Center it */
+        height: auto !important;
+        /* Override global glass-card height: 100% */
     }
 
     .intro-title {
