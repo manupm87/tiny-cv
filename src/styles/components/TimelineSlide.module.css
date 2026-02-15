@@ -1,6 +1,5 @@
 /* Timeline Slide Container */
 .section {
-    height: 100vh;
     height: 100dvh;
     width: 100vw;
     scroll-snap-align: start;
@@ -131,7 +130,6 @@
 .mobileSlide {
     align-items: center;
     padding: 0;
-    height: 100vh;
     height: 100dvh;
     scroll-snap-align: start;
     overflow: hidden;

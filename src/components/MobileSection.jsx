@@ -3,23 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import MobileLocation from './MobileLocation';
 import IntroSlide from './IntroSlide';
 import styles from '../styles/components/MobileTimelineContainer.module.css';
-
-const horizontalVariants = {
-    enter: (direction) => ({
-        x: direction > 0 ? '100%' : '-100%',
-        opacity: 0
-    }),
-    center: {
-        x: 0,
-        opacity: 1,
-        transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] }
-    },
-    exit: (direction) => ({
-        x: direction < 0 ? '100%' : '-100%',
-        opacity: 0,
-        transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] }
-    })
-};
+import { HORIZONTAL_SLIDE } from '../utils/animations';
 
 const MobileSection = ({ sectionData, locationIndex, cardIndex, direction }) => {
     // If it's the Intro section
@@ -46,7 +30,7 @@ const MobileSection = ({ sectionData, locationIndex, cardIndex, direction }) => 
                     <motion.div
                         key={locationIndex}
                         custom={direction}
-                        variants={horizontalVariants}
+                        variants={HORIZONTAL_SLIDE}
                         initial="enter"
                         animate="center"
                         exit="exit"

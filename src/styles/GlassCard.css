@@ -175,13 +175,13 @@
     }
 
     .glass-card.expanded {
-        background: rgba(10, 10, 10, 0.95);
-        /* High opacity to cover content behind */
-        box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.5);
-        /* Optional: Dim background */
-        backdrop-filter: blur(20px);
-        /* Keep some blur but mostly solid */
-        border-color: rgba(255, 255, 255, 0.1);
+        background: rgba(10, 10, 10, 0.5);
+        /* Translucid background for glass effect */
+        box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.4);
+        /* Subtle background dim */
+        backdrop-filter: blur(20px) saturate(180%);
+        /* Enhanced glass blur */
+        border-color: rgba(255, 255, 255, 0.15);
     }
 
     .card-title {

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-// import { ChevronDown } from 'lucide-react';
-import ChevronDown from 'lucide-react/dist/esm/icons/chevron-down';
+import { ChevronDown } from 'lucide-react';
 import '../styles/ScrollHint.css';
 
 /**

@@ -1,6 +1,5 @@
 /* Timeline Slide Container */
 .timeline-container {
-    height: 100vh;
     height: 100dvh;
     /* Dynamic viewport height for mobile browsers */
     width: 100vw;
@@ -18,7 +17,6 @@
 
 /* Shared Section Styles (Restored for IntroSlide) */
 .timeline-section {
-    height: 100vh;
     height: 100dvh;
     width: 100vw;
     scroll-snap-align: start;

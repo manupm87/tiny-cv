@@ -3,29 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import MobileSection from './MobileSection';
 import { getNextIndices, getPrevIndices } from '../utils/timelineHelpers';
 import styles from '../styles/components/MobileTimelineContainer.module.css';
-
-const SWIPE_THRESHOLD = 50;
-
-// Vertical transition variants for Sections
-const verticalVariants = {
-    enter: (direction) => ({
-        y: direction > 0 ? '100%' : '-100%',
-        opacity: 0,
-        zIndex: 1
-    }),
-    center: {
-        y: 0,
-        opacity: 1,
-        zIndex: 1,
-        transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] }
-    },
-    exit: (direction) => ({
-        y: direction < 0 ? '100%' : '-100%',
-        opacity: 0,
-        zIndex: 0,
-        transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] }
-    })
-};
+import { VERTICAL_SLIDE } from '../utils/animations';
+import { SWIPE_THRESHOLD } from '../utils/constants';
 
 const MobileTimelineContainer = ({ timelineData }) => {
     // State: { sectionIndex, locationIndex, cardIndex }
@@ -76,7 +55,7 @@ const MobileTimelineContainer = ({ timelineData }) => {
                     <motion.div
                         key={indices.sectionIndex}
                         custom={direction}
-                        variants={verticalVariants}
+                        variants={VERTICAL_SLIDE}
                         initial="enter"
                         animate="center"
                         exit="exit"

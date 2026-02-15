@@ -1,0 +1,28 @@
+/**
+ * Layout Constants
+ * Centralized values for breakpoints, dimensions, and z-index scale
+ */
+
+:root {
+    /* Breakpoints */
+    --breakpoint-mobile: 768px;
+    --breakpoint-tablet: 1024px;
+
+    /* Mobile Layout Proportions */
+    --mobile-header-height: 25%;
+    --mobile-image-height: 40%;
+    --mobile-card-height: 45%;
+
+    /* Z-Index Scale */
+    --z-background: -1;
+    --z-base: 0;
+    --z-content: 1;
+    --z-low-elevated: 5;
+    --z-elevated: 10;
+    --z-sticky: 20;
+    --z-modal: 30;
+    --z-tooltip: 40;
+
+    /* Interaction Thresholds */
+    --swipe-threshold: 50px;
+}

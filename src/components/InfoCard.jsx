@@ -1,7 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import ChevronDown from 'lucide-react/dist/esm/icons/chevron-down';
-import ChevronUp from 'lucide-react/dist/esm/icons/chevron-up';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import './../styles/GlassCard.css';
 import { FADE_UP, EXPAND_HEIGHT } from '../utils/animations';
 
