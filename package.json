@@ -13,7 +13,12 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
-    "coverage:open": "start coverage/index.html"
+    "coverage:open": "start coverage/index.html",
+    "test:e2e": "playwright test",
+    "test:e2e:coverage": "playwright test && node tests/convert-coverage.js && npm run coverage:e2e:report",
+    "coverage:e2e:convert": "node tests/convert-coverage.js",
+    "coverage:e2e:report": "nyc report --reporter=html --report-dir=e2e-coverage --temp-dir=.nyc_output/istanbul",
+    "coverage:e2e:open": "start e2e-coverage/index.html"
   },
   "dependencies": {
     "framer-motion": "^12.34.0",
@@ -24,6 +29,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
+    "@istanbuljs/nyc-config-typescript": "^1.0.2",
     "@playwright/test": "^1.58.2",
     "@types/node": "^25.2.3",
     "@types/react": "^19.2.7",
@@ -35,7 +41,9 @@
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.5.0",
     "jsdom": "^28.1.0",
+    "nyc": "^17.1.0",
     "playwright": "^1.58.2",
+    "v8-to-istanbul": "^9.3.0",
     "vite": "^7.3.1",
     "vitest": "^4.0.18"
   }

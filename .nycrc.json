@@ -1,0 +1,25 @@
+{
+    "extends": "@istanbuljs/nyc-config-typescript",
+    "all": true,
+    "include": [
+        "src/**/*.{js,jsx,ts,tsx}"
+    ],
+    "exclude": [
+        "**/*.spec.{js,jsx,ts,tsx}",
+        "**/*.test.{js,jsx,ts,tsx}",
+        "src/main.jsx",
+        "**/__tests__/**",
+        "tests/**"
+    ],
+    "reporter": [
+        "html",
+        "text",
+        "text-summary",
+        "lcov"
+    ],
+    "report-dir": "e2e-coverage",
+    "temp-dir": ".nyc_output",
+    "sourceMap": true,
+    "instrument": false,
+    "cache": false
+}

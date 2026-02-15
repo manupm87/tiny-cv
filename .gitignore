@@ -33,6 +33,7 @@ test-results.json
 # Coverage
 coverage/
 .nyc_output/
+e2e-coverage/
 
 # Environment Variables
 .env

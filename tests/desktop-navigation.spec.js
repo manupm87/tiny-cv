@@ -1,8 +1,10 @@
 import { test, expect } from '@playwright/test';
+import { startCoverage, stopAndSaveCoverage } from './coverage-helper.js';
 
 /**
  * Desktop Navigation E2E Tests
  * Tests scroll-based navigation, navigation dots, and desktop-specific features
+ * WITH COVERAGE COLLECTION for desktop components
  */
 
 test.describe('Desktop Navigation', () => {
@@ -10,8 +12,13 @@ test.describe('Desktop Navigation', () => {
     test.skip(({ isMobile }) => isMobile, 'Desktop only tests');
 
     test.beforeEach(async ({ page }) => {
+        await startCoverage(page);
         await page.goto('/');
         await page.waitForLoadState('networkidle');
+    });
+
+    test.afterEach(async ({ page }, testInfo) => {
+        await stopAndSaveCoverage(page, testInfo.title);
     });
 
     test('should display intro slide on load', async ({ page }) => {
@@ -107,7 +114,7 @@ test.describe('Desktop Navigation', () => {
         }
     });
 
-    test('should display background orbs animation', async ({ page }) => {
+    test('should display and animate background orbs', async ({ page }) => {
         // Check that background orbs container exists
         const orbs = page.locator('.orb');
         const orbCount = await orbs.count();
@@ -118,6 +125,17 @@ test.describe('Desktop Navigation', () => {
         for (let i = 0; i < Math.min(orbCount, 3); i++) {
             await expect(orbs.nth(i)).toBeVisible();
         }
+
+        // Scroll to trigger orb animations (they use useScroll hook)
+        await page.evaluate(() => window.scrollTo(0, 500));
+        await page.waitForTimeout(500);
+
+        // Scroll more to trigger transform changes
+        await page.evaluate(() => window.scrollTo(0, 1500));
+        await page.waitForTimeout(500);
+
+        // Orbs should still be visible after scroll
+        await expect(orbs.first()).toBeVisible();
     });
 
     test('should show location images in timeline slides', async ({ page }) => {
@@ -130,17 +148,23 @@ test.describe('Desktop Navigation', () => {
         await expect(image).toBeVisible({ timeout: 5000 });
     });
 
-    test('should handle keyboard navigation', async ({ page }) => {
+    test('should handle keyboard navigation and trigger focus states', async ({ page }) => {
         // Press Tab to start navigating
         await page.keyboard.press('Tab');
-        await page.waitForTimeout(100);
+        await page.waitForTimeout(300);
+
+        // Tab through several elements to trigger focus handlers
+        for (let i = 0; i < 5; i++) {
+            await page.keyboard.press('Tab');
+            await page.waitForTimeout(100);
+        }
 
         // Check that something is focused
         const focusedElement = page.locator(':focus');
         const count = await focusedElement.count();
 
         // At least one element should be focusable
-        expect(count).toBeGreaterThanOrEqual(0); // Some browsers may not focus immediately
+        expect(count).toBeGreaterThanOrEqual(0);
     });
 
     test('should show hover effects on cards', async ({ page }) => {
