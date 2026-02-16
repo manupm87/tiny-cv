@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { Globe } from 'lucide-react';
 import { motion as Motion, AnimatePresence } from 'framer-motion';
@@ -7,11 +7,31 @@ import '../styles/LanguageSwitcher.css';
 const LanguageSwitcher = () => {
   const { language, setLanguage } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef(null);
 
   const toggleOpen = () => setIsOpen(!isOpen);
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (containerRef.current && !containerRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('touchstart', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, [isOpen]);
+
   return (
-    <div className="language-switcher-container">
+    <div className="language-switcher-container" ref={containerRef}>
       <Motion.button
         className="language-toggle-btn"
         onClick={toggleOpen}

@@ -1,8 +1,17 @@
 .language-switcher-container {
     position: fixed;
-    top: 2rem;
-    left: 2rem;
+    top: 1rem;
+    right: 1rem;
     z-index: 100;
+}
+
+/* Mobile positioning - bottom right to avoid interference */
+@media (max-width: 768px) {
+    .language-switcher-container {
+        top: auto;
+        bottom: 1rem;
+        right: 1rem;
+    }
 }
 
 .language-toggle-btn {
@@ -28,17 +37,44 @@
 }
 
 .language-dropdown {
-    background: var(--glass-bg, rgba(255, 255, 255, 0.05));
-    backdrop-filter: var(--glass-blur, blur(16px));
-    -webkit-backdrop-filter: var(--glass-blur, blur(16px));
-    border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.1));
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    /* Desktop: below the button */
+    right: 0;
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur) saturate(180%);
+    -webkit-backdrop-filter: var(--glass-blur) saturate(180%);
+    border: 1px solid var(--glass-border);
     border-radius: 12px;
     padding: 0.5rem;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    margin-top: 0.5rem;
     overflow: hidden;
+    box-shadow:
+        var(--glass-shadow),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+}
+
+/* Highlight flare on top - same as experience cards */
+.language-dropdown::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 40%;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Mobile: dropdown appears ABOVE the button */
+@media (max-width: 768px) {
+    .language-dropdown {
+        top: auto;
+        bottom: calc(100% + 0.5rem);
+    }
 }
 
 .language-option {
@@ -57,6 +93,8 @@
     font-family: inherit;
     font-size: 0.9rem;
     white-space: nowrap;
+    position: relative;
+    z-index: 1;
 }
 
 .language-option:hover {
@@ -64,7 +102,8 @@
 }
 
 .language-option.active {
-    background: rgba(56, 189, 248, 0.2); /* Primary blue tint */
+    background: rgba(56, 189, 248, 0.2);
+    /* Primary blue tint */
     color: var(--primary-blue, #38bdf8);
     font-weight: 600;
 }
