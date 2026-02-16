@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react';
-import { timelineData } from './data/timeline';
 import IntroSlide from './components/IntroSlide';
 import TimelineSlideDesktop from './components/TimelineSlideDesktop';
 import StoryNavigator from './components/StoryNavigator';
@@ -8,8 +7,11 @@ import ErrorBoundary from './components/ErrorBoundary';
 import useIsMobile from './hooks/useIsMobile';
 import MobileTimelineContainer from './components/MobileTimelineContainer';
 import './styles/Timeline.css';
+import { LanguageProvider, useLanguage } from './context/LanguageContext';
+import LanguageSwitcher from './components/LanguageSwitcher';
 
-function App() {
+function AppContent() {
+  const { content: timelineData } = useLanguage();
   const isMobile = useIsMobile();
   const containerRef = useRef(null);
 
@@ -17,10 +19,11 @@ function App() {
   const slidesData = isMobile ? [] : timelineData;
 
   // We default to the first slide's ID
-  const [activeId, setActiveId] = useState(timelineData[0].id);
+  // Ensure timelineData is available before accessing property
+  const [activeId, setActiveId] = useState(timelineData && timelineData.length > 0 ? timelineData[0].id : 'intro');
 
   useEffect(() => {
-    if (!containerRef.current || isMobile) return;
+    if (!containerRef.current || isMobile || !timelineData) return;
 
     const observerOptions = {
       root: containerRef.current,
@@ -47,7 +50,7 @@ function App() {
     });
 
     return () => observer.disconnect();
-  }, [containerRef.current, isMobile]);
+  }, [isMobile, timelineData]);
 
   if (isMobile) {
     return (
@@ -78,6 +81,15 @@ function App() {
         ))}
       </div>
     </ErrorBoundary>
+  );
+}
+
+function App() {
+  return (
+    <LanguageProvider>
+      <AppContent />
+      <LanguageSwitcher />
+    </LanguageProvider>
   );
 }
 
