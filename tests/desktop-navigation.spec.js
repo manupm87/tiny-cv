@@ -41,7 +41,8 @@ test.describe('Desktop Navigation', () => {
             { id: 'gijon-early', title: 'Early Career' },
             { id: 'budapest', title: 'The R&D Era' },
             { id: 'london', title: 'The Fintech & Data Scale-up' },
-            { id: 'gijon-return', title: 'The Architect & AI' }
+            { id: 'gijon-return', title: 'The Architect' },
+            { id: 'ai-builder', title: 'The AI Builder' }
         ];
 
         for (const section of sections) {

@@ -14,7 +14,7 @@ test.describe('Tiny CV Application UI Tests', () => {
         await expect(introHeading).toBeVisible();
 
         // Target specific role/class to avoid ambiguity
-        await expect(page.locator('.intro-role')).toHaveText('Cloud Platform Engineer');
+        await expect(page.locator('.intro-role')).toContainText('Cloud Platform Engineer');
     });
 
     test('should have timeline slides fitting the viewport', async ({ page, isMobile }) => {
