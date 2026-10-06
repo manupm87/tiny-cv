@@ -1,10 +1,14 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Github, Linkedin, Mail, Smartphone, Cloud, Server, Network } from 'lucide-react';
+import { Github, Linkedin, Mail, Smartphone, Cloud, Server, Network, Download, Radar } from 'lucide-react';
 import PropTypes from 'prop-types';
 import './../styles/GlassCard.css';
 import './../styles/IntroSlide.css';
 import { SCALE_IN } from '../utils/animations';
+import { useLanguage } from '../context/LanguageContext';
+
+const CV_URL = './CV-ManuelPerezMartinez-CloudArchitect-EN.pdf';
+const DOWNLOAD_LABEL = { en: 'Download CV (PDF)', es: 'Descargar CV (PDF, en inglés)' };
 
 /**
  * Intro slide displaying personal information and contact details
@@ -13,6 +17,8 @@ import { SCALE_IN } from '../utils/animations';
  */
 const IntroSlide = ({ data }) => {
   const { content } = data;
+  const { language } = useLanguage();
+  const downloadLabel = DOWNLOAD_LABEL[language] || DOWNLOAD_LABEL.en;
 
   return (
     <section className="timeline-section" id={data.id}>
@@ -48,6 +54,15 @@ const IntroSlide = ({ data }) => {
           </span>
         </div>
 
+        <a
+          href={CV_URL}
+          download
+          className="download-button"
+          aria-label={downloadLabel}
+        >
+          <Download size={20} aria-hidden="true" /> {downloadLabel}
+        </a>
+
         <div className="intro-socials">
           {content.socials.map((social) => (
             <a
@@ -59,6 +74,7 @@ const IntroSlide = ({ data }) => {
             >
               {social.name === 'GitHub' && <Github size={20} />}
               {social.name === 'LinkedIn' && <Linkedin size={20} />}
+              {social.name === 'Scoutr.gg' && <Radar size={20} />}
               {social.name}
             </a>
           ))}

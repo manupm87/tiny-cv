@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react()],
   base: './',
   build: {
-    sourcemap: true, // Enable source maps for coverage mapping
+    sourcemap: process.env.COVERAGE === '1' || process.env.VITE_SOURCEMAP === '1',
   },
   test: {
     globals: true,

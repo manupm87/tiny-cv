@@ -17,8 +17,10 @@ test.describe('Accessibility', () => {
 
     test('should have semantic HTML structure', async ({ page }) => {
         // Check for main landmarks
-        const main = page.locator('main, [role="main"], .timeline-container');
-        await expect(main).toBeAttached();
+        // Exactly one main landmark, in the desktop and the mobile layout alike
+        const main = page.locator('main, [role="main"]');
+        await expect(main).toHaveCount(1);
+        await expect(main).toBeVisible();
 
         // Check for headings hierarchy
         const h1 = page.locator('h1, [role="heading"][aria-level="1"]').first();

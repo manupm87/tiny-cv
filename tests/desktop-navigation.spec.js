@@ -60,59 +60,100 @@ test.describe('Desktop Navigation', () => {
     });
 
     test('should update active navigation dot on scroll', async ({ page }) => {
-        // Find navigation container
-        const nav = page.locator('.story-navigator');
+        const nav = page.locator('.navigator');
         await expect(nav).toBeVisible();
 
-        // Check intro is active initially
+        // Intro is the current location initially
         const introNav = nav.locator('[href="#intro"]');
-        await expect(introNav).toHaveClass(/active/);
+        await expect(introNav).toHaveAttribute('aria-current', 'location');
 
         // Scroll to education section
         await page.locator('#education').scrollIntoViewIfNeeded();
-        await page.waitForTimeout(1000); // Wait for intersection observer
 
-        // Check education nav is now active
+        // Education is now current, intro no longer is
         const eduNav = nav.locator('[href="#education"]');
-        await expect(eduNav).toHaveClass(/active/, { timeout: 3000 });
+        await expect(eduNav).toHaveAttribute('aria-current', 'location', { timeout: 5000 });
+        await expect(introNav).not.toHaveAttribute('aria-current', 'location');
+    });
+
+    test('should show the period label only on hover or keyboard focus', async ({ page }) => {
+        const nav = page.locator('.navigator');
+        const introLink = nav.locator('[href="#intro"]');
+        const introLabel = introLink.locator('.tooltip');
+        const eduLink = nav.locator('[href="#education"]');
+        const eduLabel = eduLink.locator('.tooltip');
+
+        // The active dot no longer shows its label permanently
+        await expect(introLink).toHaveAttribute('aria-current', 'location');
+        await expect(introLabel).toHaveCSS('opacity', '0');
+        await expect(eduLabel).toHaveCSS('opacity', '0');
+
+        // Hover reveals the hovered dot's label only
+        await eduLink.hover();
+        await expect(eduLabel).toHaveCSS('opacity', '1');
+        await expect(introLabel).toHaveCSS('opacity', '0');
+        await page.mouse.move(0, 0);
+        await expect(eduLabel).toHaveCSS('opacity', '0');
+
+        // Keyboard focus reveals it too (walk the tab order until a dot is focused)
+        const focusedLabel = nav.locator('.navLink:focus-visible .tooltip');
+        for (let i = 0; i < 15 && (await focusedLabel.count()) === 0; i++) {
+            await page.keyboard.press('Tab');
+        }
+        await expect(focusedLabel).toHaveCount(1);
+        await expect(focusedLabel).toHaveCSS('opacity', '1');
     });
 
     test('should navigate using navigation dots', async ({ page }) => {
-        const nav = page.locator('.story-navigator');
+        const nav = page.locator('.navigator');
         await expect(nav).toBeVisible();
+
+        // One dot per slide, the new last slide included
+        await expect(nav.locator('.navLink')).toHaveCount(7);
+        await expect(nav.locator('[href="#ai-builder"]')).toBeVisible();
 
         // Click on Budapest navigation dot
         const budapestLink = nav.locator('[href="#budapest"]');
         await expect(budapestLink).toBeVisible();
         await budapestLink.click();
-        await page.waitForTimeout(1500); // Wait for smooth scroll animation
 
         // Verify we're at Budapest section
         const budapestSection = page.locator('#budapest');
-        await expect(budapestSection).toBeInViewport({ ratio: 0.3 }); // At least 30% visible
+        await expect(budapestSection).toBeInViewport({ ratio: 0.3, timeout: 5000 }); // At least 30% visible
         await expect(page.getByText('The R&D Era')).toBeVisible({ timeout: 5000 });
+        await expect(budapestLink).toHaveAttribute('aria-current', 'location', { timeout: 5000 });
     });
 
-    test('should display all cards expanded in desktop view', async ({ page }) => {
-        // Navigate to a section with cards
-        await page.locator('#gijon-early').scrollIntoViewIfNeeded();
-        await page.waitForTimeout(800);
+    test('should show cards collapsed by default and expand one at a time', async ({ page }) => {
+        const slide = page.locator('#education');
+        await slide.scrollIntoViewIfNeeded();
 
-        // All cards should be visible (glass-card class)
-        const cards = page.locator('.glass-card');
+        const cards = slide.locator('.info-card');
         const cardCount = await cards.count();
-        expect(cardCount).toBeGreaterThan(0);
+        expect(cardCount).toBeGreaterThan(1);
 
-        // In desktop, cards show all content immediately (no collapse)
-        // Just verify first few cards are visible with content
-        for (let i = 0; i < Math.min(cardCount, 2); i++) {
-            const card = cards.nth(i);
-            await expect(card).toBeVisible();
-
-            // Cards should have text content
-            const text = await card.textContent();
-            expect(text.length).toBeGreaterThan(10); // Has meaningful content
+        // Every card starts collapsed: header visible, details not rendered
+        for (let i = 0; i < cardCount; i++) {
+            await expect(cards.nth(i)).toBeVisible();
+            await expect(cards.nth(i)).toHaveAttribute('aria-expanded', 'false');
         }
+        await expect(slide.locator('.card-details')).toHaveCount(0);
+
+        // Clicking a card expands it
+        await cards.nth(0).click();
+        await expect(cards.nth(0)).toHaveAttribute('aria-expanded', 'true');
+        await expect(cards.nth(0).locator('.card-details')).toBeVisible();
+
+        // Clicking another card moves the expansion: only one is open per slide
+        await cards.nth(1).click();
+        await expect(cards.nth(1)).toHaveAttribute('aria-expanded', 'true');
+        await expect(cards.nth(0)).toHaveAttribute('aria-expanded', 'false');
+        await expect(slide.locator('.info-card[aria-expanded="true"]')).toHaveCount(1);
+
+        // Clicking the open card collapses it again
+        await cards.nth(1).click();
+        await expect(slide.locator('.info-card[aria-expanded="true"]')).toHaveCount(0);
+        await expect(slide.locator('.card-details')).toHaveCount(0);
     });
 
     test('should display and animate background orbs', async ({ page }) => {
@@ -172,9 +213,6 @@ test.describe('Desktop Navigation', () => {
         await page.locator('#gijon-early').scrollIntoViewIfNeeded();
 
         const card = page.locator('.glass-card').first();
-
-        // Get initial transform (should be none or scale(1))
-        const initialBox = await card.boundingBox();
 
         // Hover over card
         await card.hover();

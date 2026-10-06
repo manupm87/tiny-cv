@@ -69,36 +69,54 @@ test.describe('Performance', () => {
     });
 
     test('should not block main thread excessively', async ({ page }) => {
+        // Sample the event loop from the very first script: a blocked main thread shows up
+        // as a gap between two timer ticks. Measured in the page, so test-runner and
+        // actionability-wait overhead cannot leak into the number.
+        await page.addInitScript(() => {
+            window.__longestStall = 0;
+            let last = performance.now();
+            setInterval(() => {
+                const now = performance.now();
+                window.__longestStall = Math.max(window.__longestStall, now - last);
+                last = now;
+            }, 10);
+        });
+
         await page.goto('/');
+        await page.waitForLoadState('load');
+        await expect(page.locator('h1')).toBeVisible();
+        await page.waitForTimeout(1000); // let the intro animations run
 
-        // Measure interaction delay
-        const start = Date.now();
-        await page.locator('h1').click();
-        const interactionTime = Date.now() - start;
+        const longestStall = await page.evaluate(() => window.__longestStall);
+        console.log(`Longest main-thread stall: ${Math.round(longestStall)}ms`);
 
-        // Click should respond quickly (< 100ms for good UX)
-        expect(interactionTime).toBeLessThan(100);
+        // The sampler must have run, and no single stall may freeze the page for half a second
+        // (unbundled dev server + parallel workers; a production build is far below this).
+        expect(longestStall).toBeGreaterThan(0);
+        expect(longestStall).toBeLessThan(500);
     });
 
     test('should handle smooth scrolling on desktop', async ({ page, isMobile }) => {
         test.skip(isMobile, 'Desktop scrolling test');
 
         await page.goto('/');
-        await page.waitForTimeout(500);
 
-        // Scroll to bottom
-        const startY = await page.evaluate(() => window.scrollY);
+        // The page itself never scrolls: the snap container does
+        const container = page.locator('.timeline-container');
+        await expect(container).toBeVisible();
+        expect(await container.evaluate((el) => el.scrollTop)).toBe(0);
 
-        await page.evaluate(() => {
-            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-        });
+        // Smooth-scroll to the bottom
+        await container.evaluate((el) => el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' }));
 
-        await page.waitForTimeout(1500); // Wait for smooth scroll
-
-        const endY = await page.evaluate(() => window.scrollY);
-
-        // Should have scrolled (allow for any significant scroll, not exact)
-        expect(endY).toBeGreaterThan(startY);
+        // Ends on the last slide, at the very end of the scroll range
+        await expect(page.locator('#ai-builder')).toBeInViewport({ ratio: 0.9, timeout: 10000 });
+        await expect.poll(async () => {
+            const { top, max } = await container.evaluate((el) => ({
+                top: el.scrollTop, max: el.scrollHeight - el.clientHeight,
+            }));
+            return max > 0 && Math.abs(top - max) <= 2;
+        }, { timeout: 10000 }).toBe(true);
     });
 
     test('should render animations without jank', async ({ page, isMobile }) => {
@@ -172,13 +190,29 @@ test.describe('Performance', () => {
     test('should have reasonable First Input Delay (FID)', async ({ page }) => {
         await page.goto('/');
         await page.waitForLoadState('load');
+        await expect(page.locator('h1')).toBeVisible();
 
-        // Time a click interaction
-        const startTime = Date.now();
-        await page.locator('h1').click();
-        const fid = Date.now() - startTime;
+        // FID = time between the input happening and the main thread starting to handle it.
+        // Measured in the page (event.timeStamp vs handler start), not around the Playwright
+        // call, whose actionability waits on the animating heading dominated the old number.
+        await page.evaluate(() => {
+            window.__inputDelay = new Promise((resolve) => {
+                window.addEventListener(
+                    'pointerdown',
+                    (event) => resolve(performance.now() - event.timeStamp),
+                    { once: true, capture: true }
+                );
+            });
+        });
+
+        const viewport = page.viewportSize();
+        await page.mouse.click(viewport.width / 2, viewport.height / 2);
+
+        const fid = await page.evaluate(() => window.__inputDelay);
+        console.log(`First input delay: ${fid.toFixed(1)}ms`);
 
         // Good FID is < 100ms
+        expect(Number.isFinite(fid)).toBe(true);
         expect(fid).toBeLessThan(100);
     });
 
@@ -201,22 +235,32 @@ test.describe('Performance', () => {
     });
 
     test('should handle concurrent animations smoothly', async ({ page }) => {
+        const pageErrors = [];
+        page.on('pageerror', (error) => pageErrors.push(error.message));
+
         await page.setViewportSize({ width: 390, height: 844 });
         await page.goto('/');
         await page.waitForLoadState('networkidle');
+        await expect(page.locator('h1')).toBeVisible();
 
-        // Trigger multiple animations by swiping (if in mobile view)
+        // Two swipes back to back: the second starts while the first transition is still running
         for (let i = 0; i < 2; i++) {
             await page.mouse.move(200, 500);
             await page.mouse.down();
-            await page.mouse.move(200, 100);
+            await page.mouse.move(200, 300, { steps: 4 });
+            await page.mouse.move(200, 100, { steps: 4 });
             await page.mouse.up();
-            await page.waitForTimeout(600); // Wait for animation
+            await page.waitForTimeout(150); // shorter than the slide transition
         }
 
-        // Should still be responsive - main assertion is page didn't crash
-        const body = page.locator('body');
-        await expect(body).toBeVisible();
+        // Both swipes landed: intro -> education (first card) -> education (second card)
+        await expect(page.getByText('The Foundation')).toBeVisible({ timeout: 5000 });
+        await expect(page.locator('.card-title', { hasText: 'ERASMUS' })).toBeVisible({ timeout: 5000 });
+        await expect(page.locator('h1')).toHaveCount(0);
+
+        // Exactly one card is on screen once the transitions settle, and nothing threw
+        await expect(page.locator('.info-card')).toHaveCount(1, { timeout: 5000 });
+        expect(pageErrors).toEqual([]);
     });
 
     test('should cache resources appropriately', async ({ page }) => {

@@ -1,6 +1,5 @@
 @import url('./constants.css');
 @import url('./layout-constants.css');
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700&display=swap');
 
 :root {
   /* Core Colors - Liquid Glass Scheme */
@@ -29,7 +28,7 @@
 
 body {
   margin: 0;
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Outfit Variable', 'Outfit', sans-serif;
   background-color: var(--bg-dark);
   color: var(--text-primary);
   font-weight: 300;
@@ -55,4 +54,18 @@ body {
 .liquid-button:hover {
   background: rgba(255, 255, 255, 0.2);
   box-shadow: 0 0 20px var(--primary-glow);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .timeline-container {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

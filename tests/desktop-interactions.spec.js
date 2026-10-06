@@ -189,23 +189,16 @@ test.describe('Desktop Component Interactions', () => {
     });
 
     test('should trigger active section detection in StoryNavigator', async ({ page }) => {
-        const nav = page.locator('.story-navigator');
+        const nav = page.locator('.navigator');
+        const activeDot = nav.locator('[aria-current="location"]');
 
-        // Scroll through sections and verify active state updates
-        const sections = [
-            { id: 'intro', selector: '[href="#intro"]' },
-            { id: 'education', selector: '[href="#education"]' },
-            { id: 'budapest', selector: '[href="#budapest"]' }
-        ];
-
-        for (const { id, selector } of sections) {
-            // Scroll to section
+        // Scroll through sections (including the last one) and verify the active dot follows
+        for (const id of ['intro', 'education', 'budapest', 'ai-builder']) {
             await page.locator(`#${id}`).scrollIntoViewIfNeeded();
-            await page.waitForTimeout(1500); // Wait for intersection observer
 
-            // Check that this section's nav dot has active class
-            const navLink = nav.locator(selector);
-            await expect(navLink).toHaveClass(/active/, { timeout: 3000 });
+            // Exactly one dot is marked as the current location, and it is this section's
+            await expect(nav.locator(`[href="#${id}"]`)).toHaveAttribute('aria-current', 'location', { timeout: 5000 });
+            await expect(activeDot).toHaveCount(1);
         }
     });
 });

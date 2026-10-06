@@ -69,6 +69,9 @@ tiny-cv/
 └── package.json         # Project dependencies and scripts
 ```
 
+### Data
+`src/data/timeline.js` holds the CV content in both English (`en`) and Spanish (`es`); edit it to change the text without touching components.
+
 ## 🧩 Key Features & Architecture
 
 ### Data-Driven Content
@@ -88,7 +91,7 @@ The `App` component uses an `IntersectionObserver` to track the currently visibl
 
 ## 🚢 Deployment
 
-The project includes built-in scripts to deploy the build artifacts to a remote server using SCP/SSH.
+Deploys are atomic: the build is uploaded to a fresh sibling directory and swapped into place, so visitors never see a half-uploaded site and stale hashed bundles do not accumulate.
 
 ### Configuration
 Create a `.env` file in the root directory (see `.env.example`):
@@ -96,8 +99,11 @@ Create a `.env` file in the root directory (see `.env.example`):
 ```env
 DEPLOY_USER=your_username
 DEPLOY_HOST=your_server_ip_or_domain
-DEPLOY_PATH=/var/www/html/your_site
+DEPLOY_PATH=/var/www/your_site_path
 ```
+
+- `DEPLOY_USER` / `DEPLOY_HOST`: SSH login used by `ssh` and `scp`.
+- `DEPLOY_PATH`: absolute directory the site is served from. It is validated before anything runs: it must have at least three segments, no spaces, no `..`, no trailing `/`, only `[A-Za-z0-9._-]`, and must not be `/`, `/var`, `/var/www` or a home directory.
 
 ### Running Deployment
 
@@ -111,11 +117,22 @@ npm run deploy:win
 npm run deploy
 ```
 
-These scripts will:
-1.  Run `npm run build` to generate the `dist/` folder.
-2.  Connect to your server via SSH/SCP.
-3.  Upload the contents of `dist/` to the specified `DEPLOY_PATH`.
-4.  Recursively set directory permissions to `755` on the remote structure.
+Add `--dry-run` (bash) or `-DryRun` (PowerShell) to build and print the remote commands without executing them:
+
+```bash
+npm run deploy -- --dry-run
+npm run deploy:win -- -DryRun
+```
+
+Each deploy:
+1.  Runs `npm run build` to generate `dist/`.
+2.  Uploads `dist/` to `DEPLOY_PATH.new-<timestamp>` on the server.
+3.  Sets permissions (directories `755`, files `644`).
+4.  Moves the current site to `DEPLOY_PATH.prev`, moves the new one to `DEPLOY_PATH`, and keeps `.prev` as a one-generation rollback copy (the copy before it is removed; the current site is restored if the swap fails).
+
+> **Important:** the server folder is replaced as a whole on every deploy. Anything that must survive a deploy has to be part of the build output (put it in `public/`).
+
+Source maps are not generated for production builds; set `VITE_SOURCEMAP=1` (or `COVERAGE=1`) when you need them.
 
 ## 🧪 Development Commands
 

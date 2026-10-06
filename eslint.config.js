@@ -6,7 +6,17 @@ import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
   {
-    ignores: ['dist', 'playwright.config.js', 'vite.config.js', 'eslint.config.js'],
+    ignores: [
+      'dist',
+      'coverage',
+      'e2e-coverage',
+      '.nyc_output',
+      'playwright-report',
+      'test-results',
+      'playwright.config.js',
+      'vite.config.js',
+      'eslint.config.js',
+    ],
   },
   {
     files: ['**/*.{js,jsx}'],
@@ -25,7 +35,16 @@ export default defineConfig([
       },
     },
     rules: {
-      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
+      // `motion` is only ever used as a JSX member expression (<motion.div>), which core
+      // no-unused-vars cannot see without a JSX-aware plugin - same reason as the ^[A-Z_] rule.
+      'no-unused-vars': ['error', { varsIgnorePattern: '^(motion$|[A-Z_])' }],
+    },
+  },
+  {
+    // Node-side code: Playwright specs/helpers, build + image scripts.
+    files: ['tests/**/*.js', 'scripts/**/*.{js,mjs}'],
+    languageOptions: {
+      globals: { ...globals.browser, ...globals.node },
     },
   },
 ])

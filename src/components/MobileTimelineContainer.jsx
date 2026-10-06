@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import PropTypes from 'prop-types';
 import MobileSection from './MobileSection';
@@ -17,7 +17,7 @@ const MobileTimelineContainer = ({ timelineData }) => {
     if (!timelineData) return null;
     const currentSection = timelineData[indices.sectionIndex];
 
-    const handleDragEnd = (e, { offset, velocity }) => {
+    const handleDragEnd = (_event, { offset }) => {
         const swipe = offset.y;
         if (swipe < -SWIPE_THRESHOLD) {
             handleNavigation(1); // Swipe UP (Navigate NEXT)
@@ -42,8 +42,13 @@ const MobileTimelineContainer = ({ timelineData }) => {
 
     if (!currentSection) return null;
 
+    // Links and images start a native HTML drag under a mouse, which would swallow the swipe gesture.
     return (
-        <div className={styles.container} ref={containerRef}>
+        <main
+            className={styles.container}
+            ref={containerRef}
+            onDragStartCapture={(event) => event.preventDefault()}
+        >
             <motion.div
                 className={styles.dragArea}
                 drag="y"
@@ -82,7 +87,7 @@ const MobileTimelineContainer = ({ timelineData }) => {
                         )}
                 </div>
             </motion.div>
-        </div>
+        </main>
     );
 };
 

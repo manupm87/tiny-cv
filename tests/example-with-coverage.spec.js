@@ -28,7 +28,8 @@ test.describe('Tiny CV Application with Coverage', () => {
         // Coverage is automatically collected for all code executed
     });
 
-    test('should navigate through sections with coverage', async ({ page }) => {
+    test('should navigate through sections with coverage', async ({ page, isMobile }) => {
+        test.skip(isMobile, 'The mobile layout renders one slide at a time');
         const sections = ['intro', 'education', 'gijon-early', 'budapest'];
 
         for (const sectionId of sections) {

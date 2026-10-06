@@ -1,14 +1,18 @@
-import gijonImg from '../assets/images/gijon.png';
-import bolognaImg from '../assets/images/bologna.png';
-import budapestImg from '../assets/images/budapest.png';
-import londonImg from '../assets/images/london.png';
+import gijonImg from '../assets/images/gijon.webp';
+import gijonImgSmall from '../assets/images/gijon-small.webp';
+import bolognaImg from '../assets/images/bologna.webp';
+import bolognaImgSmall from '../assets/images/bologna-small.webp';
+import budapestImg from '../assets/images/budapest.webp';
+import budapestImgSmall from '../assets/images/budapest-small.webp';
+import londonImg from '../assets/images/london.webp';
+import londonImgSmall from '../assets/images/london-small.webp';
 
 // Reusable location data to avoid duplication
 const LOCATIONS = {
-  gijon: { city: "Gijón", image: gijonImg },
-  bologna: { city: "Bologna", image: bolognaImg },
-  budapest: { city: "Budapest", image: budapestImg },
-  london: { city: "London", image: londonImg }
+  gijon: { city: "Gijón", image: gijonImg, imageSmall: gijonImgSmall },
+  bologna: { city: "Bologna", image: bolognaImg, imageSmall: bolognaImgSmall },
+  budapest: { city: "Budapest", image: budapestImg, imageSmall: budapestImgSmall },
+  london: { city: "London", image: londonImg, imageSmall: londonImgSmall }
 };
 
 const SOCIALS = [
@@ -58,7 +62,7 @@ export const timelineDataEn = [
         cards: [
           {
             title: "ERASMUS Telecommunication Engineering",
-            organization: "Universitá di Bologna",
+            organization: "Università di Bologna",
             period: "2010 – 2011",
             details: ["International experience in Italy"],
             tags: ["Erasmus", "Italy"],
@@ -299,7 +303,7 @@ export const timelineDataEs = [
         cards: [
           {
             title: "ERASMUS Ingeniería de Telecomunicaciones",
-            organization: "Universitá di Bologna",
+            organization: "Università di Bologna",
             period: "2010 – 2011",
             details: ["Experiencia internacional en Italia"],
             tags: ["Erasmus", "Italia"],
@@ -320,7 +324,7 @@ export const timelineDataEs = [
               "Telemática y Redes",
               "Tesis de Máster y Especialización"
             ],
-            tags: ["Telecommunications", "Engineering", "MSc", "BSc"],
+            tags: ["Telecomunicaciones", "Ingeniería", "MSc", "BSc"],
             type: "education"
           }
         ]
@@ -346,7 +350,7 @@ export const timelineDataEs = [
               "Desarrollo y administración de plataformas Alfresco, Liferay y SharePoint.",
               "Gestión de proyectos técnicos para clientes de la administración pública regional."
             ],
-            tags: ["SharePoint", "Liferay", "Alfresco", "Project Management"],
+            tags: ["SharePoint", "Liferay", "Alfresco", "Gestión de proyectos"],
             type: "job"
           }
         ]
@@ -404,7 +408,7 @@ export const timelineDataEs = [
               "Automatización del aprovisionamiento con Terraform, Ansible y Packer, y del despliegue con Jenkins.",
               "Guardias de producción una semana de cada cuatro."
             ],
-            tags: ["Technical Lead", "GCP", "GKE", "Terraform"],
+            tags: ["Líder técnico", "GCP", "GKE", "Terraform"],
             type: "job"
           },
           {
@@ -418,7 +422,7 @@ export const timelineDataEs = [
               "Migración de secretos estáticos a secretos dinámicos de corta duración en HashiCorp Vault.",
               "Migración de charts de Helm a Jsonnet, sincronizados con Tanka y ArgoCD."
             ],
-            tags: ["SRE", "GCP", "Fintech", "Security", "IaC"],
+            tags: ["SRE", "GCP", "Fintech", "Seguridad", "IaC"],
             type: "job"
           }
         ]
@@ -448,7 +452,7 @@ export const timelineDataEs = [
               "Observabilidad con Datadog y New Relic, y guardias de producción una semana de cada cuatro.",
               "Despliegue de modelos de Anthropic en Vertex AI para el equipo de ingeniería, con control de acceso IAM y cuotas de uso."
             ],
-            tags: ["Architecture", "GCP", "Kubernetes", "GitOps", "FinOps"],
+            tags: ["Arquitectura", "GCP", "Kubernetes", "GitOps", "FinOps"],
             type: "job"
           }
         ]
@@ -490,7 +494,7 @@ export const timelineDataEs = [
               "Rediseño de la arquitectura por coste: de más de 55 € al mes a unos 5 € al mes.",
               "Formación en MLOps con MLflow, despliegue de modelos y servicios de agentes de IA."
             ],
-            tags: ["AI", "AWS", "Bedrock", "MLOps", "Master"],
+            tags: ["AI", "AWS", "Bedrock", "MLOps", "Máster"],
             type: "education"
           }
         ]

@@ -14,7 +14,7 @@ test.describe('Mobile Navigation', () => {
     test('should navigate slides with swipe gestures', async ({ page }) => {
         // 1. Initial State: Intro
         await expect(page.locator('text=Manuel Pérez Martínez')).toBeVisible();
-        await expect(page.locator('text=Cloud Platform Engineer')).toBeVisible();
+        await expect(page.locator('.intro-role')).toContainText('Cloud Platform Engineer');
 
         // 2. Swipe Up -> Education (Gijon - IB) [Vertical Slide]
         await page.mouse.move(200, 500);
@@ -24,7 +24,7 @@ test.describe('Mobile Navigation', () => {
         await page.waitForTimeout(2000); // Wait for animation
 
         await expect(page.locator('text=The Foundation')).toBeVisible();
-        await expect(page.locator('text=International Baccalaureate')).toBeVisible();
+        await expect(page.locator('.card-title', { hasText: 'International Baccalaureate' })).toBeVisible();
         await expect(page.locator('text=R.I.E.S. Jovellanos')).toBeVisible();
 
         // 3. Swipe Up -> Education (Bologna - Erasmus) [Horizontal Slide]
@@ -35,8 +35,8 @@ test.describe('Mobile Navigation', () => {
         await page.waitForTimeout(2000);
 
         await expect(page.locator('text=The Foundation')).toBeVisible(); // Same Section
-        await expect(page.locator('text=ERASMUS')).toBeVisible();
-        await expect(page.locator('text=Universitá di Bologna')).toBeVisible();
+        await expect(page.locator('.card-title', { hasText: 'ERASMUS' })).toBeVisible();
+        await expect(page.locator('text=Università di Bologna')).toBeVisible();
 
         // 4. Swipe Up -> Education (Gijon - MSc) [Horizontal Slide]
         await page.mouse.move(200, 500);
@@ -46,8 +46,8 @@ test.describe('Mobile Navigation', () => {
         await page.waitForTimeout(2000);
 
         await expect(page.locator('text=The Foundation')).toBeVisible();
-        await expect(page.locator('text=MSc Telecommunication Engineering')).toBeVisible();
-        await expect(page.locator('text=University of Oviedo')).toBeVisible();
+        await expect(page.locator('.card-title', { hasText: 'MSc Telecommunication Engineering' })).toBeVisible();
+        await expect(page.locator('.card-org', { hasText: 'University of Oviedo' })).toBeVisible();
 
         // 5. Swipe Up -> Early Career (Gijon - DXC) [Vertical Slide]
         await page.mouse.move(200, 500);
@@ -57,15 +57,17 @@ test.describe('Mobile Navigation', () => {
         await page.waitForTimeout(2000);
 
         await expect(page.locator('text=Early Career')).toBeVisible();
-        await expect(page.locator('text=Software Engineer')).toBeVisible();
-        await expect(page.locator('text=DXC')).toBeVisible();
+        await expect(page.locator('.card-title', { hasText: 'Software Engineer' })).toBeVisible();
+        await expect(page.locator('.card-org', { hasText: 'DXC' })).toBeVisible();
 
         // 6. Test Expansion
         // Click on the DXC card to expand
         const cardTitle = page.locator('h3').filter({ hasText: 'Software Engineer' });
         await cardTitle.click();
 
-        // Check for details (e.g. "Alfresco")
-        await expect(page.locator('text=Alfresco')).toBeVisible();
+        // Details are only rendered once expanded (the "Alfresco" tag alone is always visible)
+        const card = page.locator('.info-card').filter({ hasText: 'Software Engineer' });
+        await expect(card).toHaveAttribute('aria-expanded', 'true');
+        await expect(card.locator('.card-details')).toContainText('Alfresco, Liferay and SharePoint');
     });
 });

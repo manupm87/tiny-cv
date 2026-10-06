@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import PropTypes from 'prop-types';
 import InfoCard from './InfoCard';
@@ -8,14 +8,11 @@ import { HORIZONTAL_SLIDE } from '../utils/animations';
 const MobileLocation = ({ locationData, currentCardIndex, direction = 1 }) => {
     const currentCard = locationData.cards ? locationData.cards[currentCardIndex] : null;
 
-    // State to track card expansion. Resets when card changes.
-    const [isCardExpanded, setIsCardExpanded] = useState(false);
+    // Remember WHICH card is expanded, so swapping card/location collapses without an effect.
+    const [expandedCard, setExpandedCard] = useState(null);
+    const isCardExpanded = currentCard !== null && expandedCard === currentCard;
 
-    useEffect(() => {
-        setIsCardExpanded(false); // Default to collapsed on swap
-    }, [currentCardIndex, locationData]);
-
-    const toggleExpand = () => setIsCardExpanded(!isCardExpanded);
+    const toggleExpand = () => setExpandedCard(isCardExpanded ? null : currentCard);
 
     return (
         <div className={styles.locationContainer}>
@@ -24,6 +21,12 @@ const MobileLocation = ({ locationData, currentCardIndex, direction = 1 }) => {
                 <div className={styles.imageContainer}>
                     <img
                         src={locationData.image}
+                        srcSet={locationData.imageSmall ? `${locationData.imageSmall} 550w, ${locationData.image} 1100w` : undefined}
+                        sizes="100vw"
+                        width={1100}
+                        height={913}
+                        decoding="async"
+                        loading="lazy"
                         alt={locationData.city}
                         className={styles.locationImage}
                     />
@@ -64,14 +67,11 @@ MobileLocation.propTypes = {
     locationData: PropTypes.shape({
         city: PropTypes.string,
         image: PropTypes.string,
+        imageSmall: PropTypes.string,
         cards: PropTypes.array.isRequired,
     }).isRequired,
     currentCardIndex: PropTypes.number.isRequired,
     direction: PropTypes.number,
-};
-
-MobileLocation.defaultProps = {
-    direction: 1,
 };
 
 export default MobileLocation;

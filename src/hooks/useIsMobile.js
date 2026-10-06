@@ -1,33 +1,22 @@
-import { useState, useEffect } from 'react';
+import { useCallback, useSyncExternalStore } from 'react';
 import { BREAKPOINTS } from '../utils/constants';
 
+/**
+ * Tracks whether the viewport is below the mobile breakpoint.
+ * matchMedia is the external store; React re-renders only when the query flips.
+ */
 const useIsMobile = (breakpoint = BREAKPOINTS.mobile) => {
-    const [isMobile, setIsMobile] = useState(() => {
-        if (typeof window !== 'undefined') {
-            return window.innerWidth < breakpoint;
-        }
-        return false;
-    });
+    const query = `(max-width: ${breakpoint - 1}px)`;
 
-    useEffect(() => {
-        // Use matchMedia for better performance than resize listener
-        const mediaQuery = window.matchMedia(`(max-width: ${breakpoint - 1}px)`);
+    const subscribe = useCallback((onChange) => {
+        const mediaQuery = window.matchMedia(query);
+        mediaQuery.addEventListener('change', onChange);
+        return () => mediaQuery.removeEventListener('change', onChange);
+    }, [query]);
 
-        const handleChange = (e) => {
-            setIsMobile(e.matches);
-        };
+    const getSnapshot = useCallback(() => window.matchMedia(query).matches, [query]);
 
-        // Set initial value
-        setIsMobile(mediaQuery.matches);
-
-        // Add event listener
-        mediaQuery.addEventListener('change', handleChange);
-
-        // Cleanup
-        return () => mediaQuery.removeEventListener('change', handleChange);
-    }, [breakpoint]);
-
-    return isMobile;
+    return useSyncExternalStore(subscribe, getSnapshot, () => false);
 };
 
 export default useIsMobile;

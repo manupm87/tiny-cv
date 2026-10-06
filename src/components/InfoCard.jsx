@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import './../styles/GlassCard.css';
 import { FADE_UP, EXPAND_HEIGHT } from '../utils/animations';
 
-const InfoCard = ({ title, organization, period, details, tags, type, isExpanded, onClick, location }) => {
+const InfoCard = ({ title, organization, period, details = [], tags = [], type = 'job', isExpanded = false, onClick = null, location = null }) => {
   // Handle keyboard navigation
   const handleKeyDown = (e) => {
     if (onClick && (e.key === 'Enter' || e.key === ' ')) {
@@ -91,15 +91,6 @@ InfoCard.propTypes = {
   isExpanded: PropTypes.bool,
   onClick: PropTypes.func,
   location: PropTypes.string,
-};
-
-InfoCard.defaultProps = {
-  details: [],
-  tags: [],
-  type: 'job',
-  isExpanded: false,
-  onClick: null,
-  location: null,
 };
 
 export default InfoCard;

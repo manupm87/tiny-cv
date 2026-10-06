@@ -11,7 +11,7 @@ import '../styles/StoryNavigator.css';
  */
 const StoryNavigator = ({ sections, activeId }) => {
   return (
-    <div className="navigator">
+    <nav className="navigator" aria-label="Timeline sections">
       {/* Connecting Line */}
       <div className="connectingLine" />
 
@@ -24,6 +24,7 @@ const StoryNavigator = ({ sections, activeId }) => {
             href={`#${section.id}`}
             className="navLink"
             aria-label={`Go to ${section.title}`}
+            aria-current={isActive ? 'location' : undefined}
           >
             {/* Tooltip on hover */}
             <div className={`tooltip ${isActive ? 'active' : ''}`}>
@@ -43,7 +44,7 @@ const StoryNavigator = ({ sections, activeId }) => {
           </a>
         );
       })}
-    </div>
+    </nav>
   );
 };
 

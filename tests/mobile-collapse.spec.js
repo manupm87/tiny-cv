@@ -2,46 +2,49 @@ import { test, expect } from '@playwright/test';
 
 test.use({ viewport: { width: 390, height: 844 } }); // iPhone 12 pro size
 
+const swipeUp = async (page) => {
+    await page.mouse.move(200, 500);
+    await page.mouse.down();
+    await page.mouse.move(200, 300, { steps: 4 });
+    await page.mouse.move(200, 100, { steps: 4 });
+    await page.mouse.up();
+};
+
 test('Mobile experience cards should visually collapse and expand', async ({ page }) => {
-    // 1. Navigate to the app
+    // 1. The mobile timeline opens on the intro slide, which has no cards
     await page.goto('/');
     await page.waitForLoadState('networkidle');
+    await expect(page.locator('h1')).toBeVisible();
+    await expect(page.locator('.info-card')).toHaveCount(0);
 
-    // 2. Wait for timeline to load
-    const firstCard = page.locator('.info-card').first();
-    await firstCard.waitFor({ state: 'visible', timeout: 10000 });
+    // 2. Swipe up to the first experience card
+    await swipeUp(page);
+    const card = page.locator('.info-card').filter({ hasText: 'International Baccalaureate' });
+    await expect(card).toBeVisible({ timeout: 5000 });
 
-    // 3. In mobile view, check if card is interactive
-    const isClickable = await firstCard.getAttribute('role');
+    // 3. It is an interactive, collapsed card: details are not rendered
+    await expect(card).toHaveAttribute('role', 'button');
+    await expect(card).toHaveAttribute('aria-expanded', 'false');
+    await expect(card).toHaveClass(/collapsed/);
+    await expect(card.locator('.card-details')).toHaveCount(0);
 
-    if (isClickable === 'button') {
-        // Card is collapsible
-        // Check initial collapsed state
-        const detailsList = firstCard.locator('.card-details');
-        const initialCount = await detailsList.count();
+    // 4. Tap to expand: details appear
+    await card.click();
+    await expect(card).toHaveAttribute('aria-expanded', 'true');
+    await expect(card).toHaveClass(/expanded/);
+    await expect(card.getByText('High School Education')).toBeVisible();
 
-        // 4. Click to expand
-        await firstCard.click();
-        await page.waitForTimeout(500); // Animation time
+    // 5. Tap again to collapse: details are removed
+    await card.click();
+    await expect(card).toHaveAttribute('aria-expanded', 'false');
+    await expect(card.locator('.card-details')).toHaveCount(0);
 
-        // 5. Check expanded state
-        const expandedCount = await detailsList.count();
-        expect(expandedCount).toBeGreaterThanOrEqual(initialCount || 0);
-
-        // 6. Check interaction with another card (Accordion behavior)
-        const secondCard = page.locator('.info-card').nth(1);
-        if (await secondCard.count() > 0) {
-            const secondIsClickable = await secondCard.getAttribute('role');
-            if (secondIsClickable === 'button') {
-                await secondCard.click();
-                await page.waitForTimeout(500);
-
-                // Second card should be visible
-                expect(await secondCard.isVisible()).toBeTruthy();
-            }
-        }
-    } else {
-        // Desktop view - cards are always expanded
-        expect(await firstCard.isVisible()).toBeTruthy();
-    }
+    // 6. An expanded card does not leak its state to the next one
+    await card.click();
+    await expect(card).toHaveAttribute('aria-expanded', 'true');
+    await swipeUp(page);
+    const nextCard = page.locator('.info-card').filter({ hasText: 'ERASMUS' });
+    await expect(nextCard).toBeVisible({ timeout: 5000 });
+    await expect(nextCard).toHaveAttribute('aria-expanded', 'false');
+    await expect(nextCard.locator('.card-details')).toHaveCount(0);
 });

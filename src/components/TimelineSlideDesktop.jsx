@@ -46,6 +46,12 @@ const TimelineSlideDesktop = ({ data, index }) => {
                                     {location.image && (
                                         <img
                                             src={location.image}
+                                            srcSet={location.imageSmall ? `${location.imageSmall} 550w, ${location.image} 1100w` : undefined}
+                                            sizes={isMultiLocation ? '(min-width: 768px) 25vw, 100vw' : '(min-width: 1025px) 45vw, 100vw'}
+                                            width={1100}
+                                            height={913}
+                                            decoding="async"
+                                            loading={index > 1 ? 'lazy' : 'eager'}
                                             alt={location.city}
                                             className={styles.locationImg}
                                         />
@@ -87,6 +93,7 @@ TimelineSlideDesktop.propTypes = {
             PropTypes.shape({
                 city: PropTypes.string,
                 image: PropTypes.string,
+                imageSmall: PropTypes.string,
                 cards: PropTypes.arrayOf(PropTypes.object).isRequired,
             })
         ),

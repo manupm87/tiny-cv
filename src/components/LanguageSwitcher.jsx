@@ -19,14 +19,20 @@ const LanguageSwitcher = () => {
       }
     };
 
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') setIsOpen(false);
+    };
+
     if (isOpen) {
       document.addEventListener('mousedown', handleClickOutside);
       document.addEventListener('touchstart', handleClickOutside);
+      document.addEventListener('keydown', handleKeyDown);
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
       document.removeEventListener('touchstart', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
     };
   }, [isOpen]);
 
@@ -37,7 +43,9 @@ const LanguageSwitcher = () => {
         onClick={toggleOpen}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
-        aria-label="Change Language"
+        aria-label={language === 'es' ? 'Cambiar idioma' : 'Change language'}
+        aria-expanded={isOpen}
+        aria-haspopup="true"
       >
         <Globe size={24} />
       </Motion.button>
@@ -55,13 +63,13 @@ const LanguageSwitcher = () => {
               className={`language-option ${language === 'en' ? 'active' : ''}`}
               onClick={() => { setLanguage('en'); setIsOpen(false); }}
             >
-              <span role="img" aria-label="UK Flag">🇬🇧</span> English
+              <span aria-hidden="true">🇬🇧</span> English
             </button>
             <button
               className={`language-option ${language === 'es' ? 'active' : ''}`}
               onClick={() => { setLanguage('es'); setIsOpen(false); }}
             >
-              <span role="img" aria-label="Spain Flag">🇪🇸</span> Español
+              <span aria-hidden="true">🇪🇸</span> Español
             </button>
           </Motion.div>
         )}

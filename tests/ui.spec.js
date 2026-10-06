@@ -18,7 +18,8 @@ test.describe('Tiny CV Application UI Tests', () => {
     });
 
     test('should have timeline slides fitting the viewport', async ({ page, isMobile }) => {
-        const slides = ['intro', 'education', 'gijon-early', 'budapest', 'london', 'gijon-return'];
+        test.skip(isMobile, 'The mobile layout renders one slide at a time (see mobile-navigation.spec.js)');
+        const slides = ['intro', 'education', 'gijon-early', 'budapest', 'london', 'gijon-return', 'ai-builder'];
 
         for (const slideId of slides) {
             const section = page.locator(`#${slideId}`);
@@ -32,7 +33,8 @@ test.describe('Tiny CV Application UI Tests', () => {
         }
     });
 
-    test('should navigate to next slide on scroll', async ({ page }) => {
+    test('should navigate to next slide on scroll', async ({ page, isMobile }) => {
+        test.skip(isMobile, 'The mobile layout navigates by swipe, not scroll');
         const educationSlide = page.locator('#education');
         await educationSlide.scrollIntoViewIfNeeded();
         await expect(educationSlide).toBeInViewport();
@@ -40,6 +42,7 @@ test.describe('Tiny CV Application UI Tests', () => {
     });
 
     test('Card Interaction (Hover/Visibility)', async ({ page, isMobile }) => {
+        test.skip(isMobile, 'Desktop scroll layout only');
         const slide = page.locator('#gijon-early');
         await slide.scrollIntoViewIfNeeded();
 
@@ -52,7 +55,8 @@ test.describe('Tiny CV Application UI Tests', () => {
         await expect(card).toBeVisible();
     });
 
-    test('Animation classes presence', async ({ page }) => {
+    test('Animation classes presence', async ({ page, isMobile }) => {
+        test.skip(isMobile, 'Desktop scroll layout only');
         const slide = page.locator('#education');
         await slide.scrollIntoViewIfNeeded();
 

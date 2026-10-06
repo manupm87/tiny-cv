@@ -13,6 +13,7 @@
     justify-content: center;
     position: relative;
     padding: var(--slide-pad);
+    padding-inline: calc(var(--slide-pad) + 2.5rem);
     overflow: hidden;
 }
 

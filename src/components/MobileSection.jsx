@@ -6,7 +6,7 @@ import IntroSlide from './IntroSlide';
 import styles from '../styles/components/MobileTimelineContainer.module.css';
 import { HORIZONTAL_SLIDE } from '../utils/animations';
 
-const MobileSection = ({ sectionData, locationIndex, cardIndex, direction }) => {
+const MobileSection = ({ sectionData, locationIndex, cardIndex, direction = 1 }) => {
     // If it's the Intro section
     if (sectionData.type === 'intro') {
         return (
@@ -61,10 +61,6 @@ MobileSection.propTypes = {
     locationIndex: PropTypes.number.isRequired,
     cardIndex: PropTypes.number.isRequired,
     direction: PropTypes.number,
-};
-
-MobileSection.defaultProps = {
-    direction: 1,
 };
 
 export default MobileSection;

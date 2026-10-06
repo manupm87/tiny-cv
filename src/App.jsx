@@ -7,6 +7,7 @@ import ErrorBoundary from './components/ErrorBoundary';
 import useIsMobile from './hooks/useIsMobile';
 import MobileTimelineContainer from './components/MobileTimelineContainer';
 import './styles/Timeline.css';
+import { MotionConfig } from 'framer-motion';
 import { LanguageProvider, useLanguage } from './context/LanguageContext';
 import LanguageSwitcher from './components/LanguageSwitcher';
 
@@ -62,7 +63,7 @@ function AppContent() {
 
   return (
     <ErrorBoundary fallbackMessage="Something went wrong loading the timeline.">
-      <div className="timeline-container" ref={containerRef}>
+      <main className="timeline-container" ref={containerRef}>
         {/* Global Background Elements */}
         <ErrorBoundary fallbackMessage="Background animation failed to load." showReset>
           <BackgroundOrbs scrollContainer={containerRef} />
@@ -79,17 +80,19 @@ function AppContent() {
             )}
           </ErrorBoundary>
         ))}
-      </div>
+      </main>
     </ErrorBoundary>
   );
 }
 
 function App() {
   return (
-    <LanguageProvider>
-      <AppContent />
-      <LanguageSwitcher />
-    </LanguageProvider>
+    <MotionConfig reducedMotion="user">
+      <LanguageProvider>
+        <AppContent />
+        <LanguageSwitcher />
+      </LanguageProvider>
+    </MotionConfig>
   );
 }
 

@@ -3,22 +3,24 @@
     max-width: 800px;
     width: 100%;
     text-align: center;
-    padding: 4rem 2rem;
+    padding: clamp(1.5rem, 5vh, 4rem) 2rem;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2rem;
+    gap: clamp(0.75rem, 2.5vh, 2rem);
+    max-height: 100%;
+    box-sizing: border-box;
 }
 
 .intro-icons {
     display: flex;
     gap: 1rem;
     color: var(--primary-blue);
-    margin-bottom: 1rem;
+    margin-bottom: 0;
 }
 
 .intro-title {
-    font-size: 4rem;
+    font-size: clamp(2.5rem, 7vh, 4rem);
     font-weight: 800;
     margin: 0;
     background: linear-gradient(to right, #fff, #94a3b8);
@@ -28,16 +30,20 @@
 }
 
 .intro-role {
-    font-size: 1.5rem;
+    font-size: clamp(1.1rem, 2.6vh, 1.5rem);
+    line-height: 1.3;
     color: var(--primary-blue);
-    margin: 0.5rem 0;
+    margin: 0.5rem auto;
+    max-width: 640px;
+    text-wrap: balance;
+    overflow-wrap: anywhere;
 }
 
 .intro-summary {
     color: var(--text-secondary);
-    font-size: 1.1rem;
+    font-size: clamp(0.95rem, 2.2vh, 1.1rem);
     max-width: 600px;
-    margin: 1rem auto;
+    margin: 0.5rem auto;
 }
 
 .intro-contact {
@@ -58,7 +64,34 @@
 .intro-socials {
     display: flex;
     gap: 1rem;
-    margin-top: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.download-button {
+    padding: 0.85rem 1.75rem;
+    background: var(--primary-blue);
+    color: #0b1220;
+    border-radius: 999px;
+    text-decoration: none;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    box-shadow: 0 0 24px rgba(56, 189, 248, 0.35);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.download-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 32px rgba(56, 189, 248, 0.55);
+}
+
+.download-button:focus-visible,
+.social-button:focus-visible,
+.contact-link:focus-visible {
+    outline: 3px solid #fff;
+    outline-offset: 3px;
 }
 
 .social-button {
@@ -95,8 +128,13 @@
         font-size: 2.5rem;
     }
 
+    .intro-card {
+        gap: 1rem;
+        max-height: 100%;
+    }
+
     .intro-role {
-        font-size: 1.2rem;
+        font-size: 1.05rem;
     }
 
     .intro-summary {
@@ -115,5 +153,38 @@
 
     .social-button {
         padding: 0.5rem 1rem;
+    }
+}
+/* Short phones (e.g. 360x640, 375x667): the card must still fit one screen, nothing clipped */
+@media (max-width: 768px) and (max-height: 720px) {
+    .intro-card {
+        padding: 1rem 1.25rem;
+        gap: 0.6rem;
+    }
+
+    .intro-icons {
+        display: none;
+    }
+
+    .intro-title {
+        font-size: 2rem;
+    }
+
+    .intro-role {
+        font-size: 1rem;
+        margin: 0.25rem auto;
+    }
+
+    .intro-summary {
+        font-size: 0.9rem;
+        margin: 0.25rem auto;
+    }
+
+    .intro-contact {
+        gap: 0.5rem;
+    }
+
+    .download-button {
+        padding: 0.6rem 1.25rem;
     }
 }

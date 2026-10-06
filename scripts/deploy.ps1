@@ -1,88 +1,112 @@
-# scripts/deploy.ps1
+# Atomic deploy of dist/ to DEPLOY_USER@DEPLOY_HOST:DEPLOY_PATH (values from .env).
+#
+# The build is uploaded to DEPLOY_PATH.new-<timestamp>, then swapped into place
+# (current -> DEPLOY_PATH.prev, new -> DEPLOY_PATH). One previous copy is kept as
+# DEPLOY_PATH.prev for rollback; the copy before that is removed.
+# The whole server folder is REPLACED on every deploy: anything that must survive
+# a deploy has to be part of the build output (put it in public/).
+#
+# Usage: powershell scripts/deploy.ps1 [-DryRun]   (-DryRun builds and prints the remote commands only)
+param([switch]$DryRun)
 
-# Check for .env file and load variables
+$ErrorActionPreference = 'Stop'
+
+function Fail($msg) {
+    Write-Host "Error: $msg" -ForegroundColor Red
+    exit 1
+}
+
 if (Test-Path .env) {
-    Get-Content .env | ForEach-Object {
-        if ($_ -match '^([^#=]+)=(.*)$') {
-            $name = $matches[1].Trim()
-            $value = $matches[2].Trim()
-            [Environment]::SetEnvironmentVariable($name, $value, "Process")
+    foreach ($line in Get-Content .env) {
+        if ($line -match '^\s*(DEPLOY_USER|DEPLOY_HOST|DEPLOY_PATH)\s*=(.*)$') {
+            $value = $matches[2].Trim().Trim('"').Trim("'")
+            [Environment]::SetEnvironmentVariable($matches[1], $value, 'Process')
         }
     }
 }
 
-# Retrieve environment variables
-$env:DEPLOY_USER = [Environment]::GetEnvironmentVariable("DEPLOY_USER")
-$env:DEPLOY_HOST = [Environment]::GetEnvironmentVariable("DEPLOY_HOST")
-$env:DEPLOY_PATH = [Environment]::GetEnvironmentVariable("DEPLOY_PATH")
+$user = $env:DEPLOY_USER
+$deployHost = $env:DEPLOY_HOST
+$path = $env:DEPLOY_PATH
 
-# Check for required variables
-if (-not $env:DEPLOY_User -or -not $env:DEPLOY_HOST -or -not $env:DEPLOY_PATH) {
-    Write-Error "Error: DEPLOY_USER, DEPLOY_HOST, or DEPLOY_PATH is not set in .env"
-    exit 1
+if (-not $user -or -not $deployHost -or -not $path) {
+    Fail 'DEPLOY_USER, DEPLOY_HOST and DEPLOY_PATH must be set in .env'
+}
+if ($user -notmatch '^[A-Za-z0-9._][A-Za-z0-9._-]*$') { Fail 'DEPLOY_USER has unsafe characters' }
+if ($deployHost -notmatch '^[A-Za-z0-9][A-Za-z0-9.:-]*$') { Fail 'DEPLOY_HOST has unsafe characters' }
+
+if (-not $path.StartsWith('/')) { Fail "DEPLOY_PATH must be absolute: $path" }
+if ($path -match '\s') { Fail 'DEPLOY_PATH must not contain spaces' }
+if ($path.Contains('..')) { Fail "DEPLOY_PATH must not contain '..'" }
+if ($path.EndsWith('/')) { Fail "DEPLOY_PATH must not end in '/'" }
+if ($path -notmatch '^/[A-Za-z0-9_-][A-Za-z0-9._-]*(/[A-Za-z0-9_-][A-Za-z0-9._-]*){2,}$') {
+    Fail "DEPLOY_PATH needs at least three segments, each starting with a letter, digit, _ or -: $path"
+}
+if (@('/var', '/var/www', '/root') -contains $path) { Fail "DEPLOY_PATH is a protected directory: $path" }
+if ($path -eq "/home/$user" -or $path -eq "/Users/$user") { Fail "DEPLOY_PATH must not be a home directory: $path" }
+
+$ts = Get-Date -Format 'yyyyMMddHHmmss'
+$new = "$path.new-$ts"
+$prev = "$path.prev"
+$target = "$user@$deployHost"
+
+$prep = "set -eu; mkdir '$new'"
+$swap = @"
+set -eu
+trap '' HUP
+restore() { if [ ! -e '$path' ] && [ -e '$prev' ]; then mv -- '$prev' '$path'; fi; }
+trap restore EXIT
+find '$new' -type d -exec chmod 755 {} +
+find '$new' -type f -exec chmod 644 {} +
+if [ -e '$path' ]; then
+  if [ -e '$prev' ]; then rm -rf -- '$prev'; fi
+  mv -- '$path' '$prev'
+fi
+mv -- '$new' '$path'
+trap - EXIT
+"@
+$swap = $swap -replace "`r`n", "`n"
+
+function Invoke-Native([scriptblock]$cmd, [string]$what, [switch]$CleanupNew) {
+    & $cmd
+    if ($LASTEXITCODE -ne 0) {
+        $code = $LASTEXITCODE
+        # A failed upload or swap must not leave the uploaded copy behind (a no-op once the swap has moved it).
+        if ($CleanupNew) { ssh $target "rm -rf -- '$new'" }
+        Fail "$what failed with exit code $code"
+    }
 }
 
-Write-Host "Building project..."
-npm run build
+Write-Host 'Building project...'
+Invoke-Native { npm run build } 'Build'
+if (-not (Test-Path dist)) { Fail 'dist/ not found after build' }
 
-if ($LASTEXITCODE -ne 0) {
-    Write-Error "Build failed. Aborting deployment."
-    exit 1
+Write-Host ''
+Write-Host "Deploy plan for ${target}:"
+Write-Host "  1. ssh ${target}: $prep"
+Write-Host "  2. scp -r dist/. ${target}:'$new/'"
+Write-Host "  3. ssh ${target} sh -s <<'EOF'"
+$swap.TrimEnd("`n").Split("`n") | ForEach-Object { Write-Host "     $_" }
+Write-Host '     EOF'
+Write-Host ''
+
+if ($DryRun) {
+    Write-Host 'Dry run: nothing executed.'
+    exit 0
 }
 
-Write-Host "Deploying to $env:DEPLOY_HOST..."
+Invoke-Native { ssh $target $prep } 'Remote mkdir'
 
-# Use SCP to copy files. 
-# Note: scp -r dist/* copies the CONTENTS of dist to the remote path.
-# We use Resolve-Path to handle the wildcard expansion properly in PowerShell before passing to scp.
-$distPath = Join-Path (Get-Location) "dist"
-if (-not (Test-Path $distPath)) {
-    Write-Error "Dist folder not found!"
-    exit 1
-}
-
-# Construct SCP command
-# We use * to copy contents. 
-# Quote paths to handle spaces if necessary, though simpler is often better with scp scp quirks.
+Push-Location dist
 try {
-    # Using 'dist/*' directly with scp in PowerShell might behave differently than bash globbing.
-    # The safest way to copy contents of a dir to a remote dir effectively replacing it or merging it
-    # without creating 'dist' folder inside 'dest' is tricky with scp.
-    # Command: scp -r dist/* user@host:path
-    
-    # Let's try executing scp directly.
-    # We escape the wildcard so PowerShell doesn't try to expand it locally if we want scp to handle it, 
-    # BUT scp does not do globbing on local files, the shell does.
-    # So we MUST let PowerShell expand it or pass individual files.
-    
-    # Better approach for recursive content copy without 'dist' parent folder:
-    # Enter dist, copy all, exit.
-    
-    Push-Location dist
-    scp -r * "${env:DEPLOY_USER}@${env:DEPLOY_HOST}:${env:DEPLOY_PATH}"
-    if ($LASTEXITCODE -eq 0) {
-        Write-Host "File copy successful!"
-        
-        Write-Host "Fixing permissions on remote server..."
-        # Set directories to 755 (leave files as is, to avoid execution bit on files)
-        ssh "${env:DEPLOY_USER}@${env:DEPLOY_HOST}" "find ${env:DEPLOY_PATH} -type d -exec chmod 755 {} +"
-        
-        if ($LASTEXITCODE -eq 0) {
-            Write-Host "Deployment successful!"
-        }
-        else {
-            Write-Error "Permission fix failed with exit code $LASTEXITCODE"
-            exit 1
-        }
-    }
-    else {
-        throw "SCP failed with exit code $LASTEXITCODE"
-    }
-}
-catch {
-    Write-Error "Deployment failed: $_"
-    exit 1
+    Invoke-Native { scp -r . "${target}:${new}/" } 'Upload' -CleanupNew
 }
 finally {
     Pop-Location
 }
+
+# The script is sent base64-encoded so no CRLF or quoting issue can reach the remote shell.
+$b64 = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($swap))
+Invoke-Native { ssh $target "echo $b64 | base64 -d | sh" } 'Remote swap' -CleanupNew
+
+Write-Host 'Deployment successful!'

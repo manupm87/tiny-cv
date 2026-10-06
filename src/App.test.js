@@ -18,9 +18,12 @@ describe('Application', () => {
         expect(true).toBe(true);
     });
 
-    it('should load timeline data', () => {
-        // Just verify the module loads without errors
-        expect(true).toBe(true);
+    it('should load timeline data in both languages with matching slide ids', () => {
+        const ids = (data) => data.map((slide) => slide.id);
+        expect(ids(timeline.timelineDataEn)).toEqual([
+            'intro', 'education', 'gijon-early', 'budapest', 'london', 'gijon-return', 'ai-builder',
+        ]);
+        expect(ids(timeline.timelineDataEs)).toEqual(ids(timeline.timelineDataEn));
     });
 
     it('should have all components defined', () => {

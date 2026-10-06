@@ -1,17 +1,18 @@
 {
-    "name": "Tiny CV",
-    "short_name": "TinyCV",
-    "description": "A tiny interactive CV",
+    "name": "Manuel Pérez Martínez · Cloud Platform Architect",
+    "short_name": "Manuel Pérez",
+    "description": "Cloud Platform Architect and Engineer. Kubernetes, Google Cloud, SRE.",
     "start_url": ".",
+    "scope": ".",
     "display": "standalone",
-    "orientation": "portrait",
-    "background_color": "#000000",
-    "theme_color": "#000000",
+    "background_color": "#0b1120",
+    "theme_color": "#0b1120",
     "icons": [
         {
-            "src": "vite.svg",
-            "sizes": "192x192",
-            "type": "image/svg+xml"
+            "src": "favicon.svg",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "any"
         }
     ]
 }

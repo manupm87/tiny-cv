@@ -50,8 +50,22 @@
     opacity: 0;
 }
 
-.tooltip.active {
+.navLink:hover .tooltip,
+.navLink:focus-visible .tooltip {
     opacity: 1;
+}
+
+/* The current section's label is always visible only where it cannot cover the cards */
+@media (min-width: 1500px) {
+    .tooltip.active {
+        opacity: 1;
+    }
+}
+
+.navLink:focus-visible {
+    outline: 2px solid var(--primary-glow, #fff);
+    outline-offset: 6px;
+    border-radius: var(--radius-circle, 50%);
 }
 
 /* Navigation dot */
