@@ -56,7 +56,7 @@ test.describe('Language detection', () => {
             const link = page.locator(DOWNLOAD_LINK);
             await expect(link).toHaveText(/Download CV \(PDF\)/);
             await expect(link).toHaveAttribute('download', '');
-            // Relative, so it resolves under the /me/ sub-path in production
+            // Relative, so it resolves wherever the site is mounted
             await expect(link).toHaveAttribute('href', './CV-ManuelPerezMartinez-CloudArchitect-EN.pdf');
 
             const response = await page.request.get(await link.evaluate((a) => a.href));
