@@ -8,7 +8,7 @@ _Personal information_
 **Phone** (+34) 660 163 565
 **Email** [manugijon@gmail.com](mailto:manugijon@gmail.com)
 **LinkedIn** [linkedin.com/in/mperezmartin](https://www.linkedin.com/in/mperezmartin)
-**Web** [manuelpm.com/me](https://manuelpm.com/me) · [scoutr.gg](https://scoutr.gg)
+**Web** [manuelpm.com](https://manuelpm.com) · [scoutr.gg](https://scoutr.gg)
 **Nationality** Spanish (EU work rights)
 
 ## Profile
@@ -151,7 +151,7 @@ _Side project_
 
 ### Genetic Neural Snake
 
-[manuelpm.com/gnsnake](https://manuelpm.com/gnsnake/)
+[manuelpm.com/playground/gnsnake](https://manuelpm.com/playground/gnsnake/)
 
 Neural networks trained by a genetic algorithm to play Snake.
 
