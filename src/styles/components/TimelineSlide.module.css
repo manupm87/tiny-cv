@@ -1,5 +1,10 @@
 /* Timeline Slide Container */
 .section {
+    /* Space the slide header takes; the cards column is capped against it so a slide never outgrows the viewport */
+    --slide-pad: 2rem;
+    --slide-header: 9.5rem;
+    --slide-gap: 1.25rem;
+    --cards-max: calc(100dvh - 2 * var(--slide-pad) - var(--slide-header) - var(--slide-gap));
     height: 100dvh;
     width: 100vw;
     scroll-snap-align: start;
@@ -7,22 +12,30 @@
     align-items: center;
     justify-content: center;
     position: relative;
-    padding: 2rem;
+    padding: var(--slide-pad);
+    overflow: hidden;
 }
 
 /* Content Wrapper */
 .contentWrapper {
     max-width: 1200px;
     width: 100%;
+    max-height: 100%;
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: var(--slide-gap);
     z-index: 1;
+}
+
+.header {
+    text-align: center;
+    flex: none;
 }
 
 /* Typography */
 .title {
-    font-size: 3.5rem;
+    font-size: clamp(2rem, 5.5vh, 3.5rem);
+    line-height: 1.15;
     font-weight: 800;
     background: linear-gradient(135deg, #fff 0%, rgba(255, 255, 255, 0.7) 100%);
     -webkit-background-clip: text;
@@ -34,17 +47,17 @@
 }
 
 .subtitle {
-    font-size: 1.5rem;
+    font-size: 1.35rem;
     color: var(--text-secondary);
     font-weight: 400;
-    margin-top: 0.5rem;
+    margin: 0.4rem 0 0;
 }
 
 .description {
     color: var(--text-secondary);
     max-width: 600px;
-    line-height: 1.6;
-    margin: 1rem auto;
+    line-height: 1.5;
+    margin: 0.6rem auto 0;
 }
 
 /* Layouts */
@@ -66,8 +79,7 @@
 .locationRow {
     display: flex;
     gap: 4rem;
-    padding: 2rem 0;
-    align-items: flex-start;
+    align-items: center;
 }
 
 .locationRowReverse {
@@ -75,21 +87,28 @@
 }
 
 .locationCol {
+    --col-image: 22vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2rem;
-    width: 100%;
-    padding: 2rem 0;
+    gap: 1rem;
+    flex: 1;
+    min-width: 0;
 }
 
 /* Location Image */
 .locationImage {
     flex: 1;
+    min-width: 0;
+    display: flex;
+    justify-content: center;
 }
 
 .locationImg {
-    width: 100%;
+    width: auto;
+    max-width: 100%;
+    max-height: var(--cards-max);
+    object-fit: contain;
     border-radius: 0;
     border: none;
     box-shadow: none;
@@ -97,9 +116,12 @@
     transition: transform 0.5s ease, filter 0.5s ease;
 }
 
+.locationCol .locationImage {
+    flex: none;
+}
+
 .locationCol .locationImg {
-    max-width: 350px;
-    margin-bottom: 1rem;
+    max-height: var(--col-image);
 }
 
 .locationImg:hover {
@@ -110,19 +132,61 @@
 /* Location Cards */
 .locationCards {
     flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
+    min-width: 0;
+    width: 100%;
 }
 
 .locationCol .locationCards {
+    flex: none;
     max-width: 800px;
 }
 
+/* Cards are collapsed by default; the open one shrinks and scrolls inside the cap */
 .cardsList {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1rem;
+    max-height: var(--cards-max);
+}
+
+.locationCol .cardsList {
+    max-height: calc(var(--cards-max) - var(--col-image) - 1rem);
+}
+
+.cardsList :global(.glass-card) {
+    flex: 0 0 auto;
+    min-height: 0;
+    padding: 1.5rem 2rem;
+}
+
+.cardsList :global(.glass-card.expanded) {
+    flex: 0 1 auto;
+    min-height: 9rem;
+    max-height: none;
+    overflow-y: auto;
+}
+
+/* While one card is open, its siblings drop their tags to leave it more room */
+.hasExpanded :global(.glass-card.collapsed .card-tags) {
+    display: none;
+}
+
+.hasExpanded :global(.glass-card.collapsed .card-period) {
+    margin-bottom: 0;
+}
+
+.cardsList :global(.card-period) {
+    margin-bottom: 1rem;
+}
+
+.cardsList :global(.card-details) {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 1.1rem;
+}
+
+.cardsList :global(.card-details li) {
+    margin-bottom: 0.55rem;
 }
 
 /* Mobile Specific Styles */
@@ -252,18 +316,62 @@
 
 /* Responsive */
 @media (max-width: 1024px) {
-    .multiLocationRow {
-        flex-direction: column;
-    }
-
     .locationRow,
     .locationRowReverse {
+        --row-image: 16vh;
         flex-direction: column;
-        gap: 2rem;
+        gap: 1rem;
+        align-items: stretch;
     }
 
-    .title {
-        font-size: 2.5rem;
+    .locationRow .locationImage {
+        flex: none;
+    }
+
+    .locationRow .locationImg {
+        max-height: var(--row-image);
+    }
+
+    .locationRow .cardsList {
+        max-height: calc(var(--cards-max) - var(--row-image) - 1rem);
+    }
+
+    .multiLocationRow {
+        gap: 1rem;
+    }
+
+    .cardsList :global(.glass-card) {
+        padding: 1.25rem 1.25rem;
+    }
+}
+
+/* Short viewports: give the cards the room the header and images would take */
+@media (max-height: 680px) {
+    .section {
+        --slide-pad: 1.25rem;
+        --slide-header: 7rem;
+    }
+
+    .description {
+        display: none;
+    }
+
+    .locationCol {
+        --col-image: 14vh;
+    }
+
+    .cardsList :global(.glass-card) {
+        padding: 1rem 1.25rem;
+    }
+}
+
+@media (max-height: 680px) and (max-width: 1024px) {
+    .locationRow .locationImage {
+        display: none;
+    }
+
+    .locationRow .cardsList {
+        max-height: var(--cards-max);
     }
 }
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import PropTypes from 'prop-types';
 import InfoCard from './InfoCard';
@@ -6,6 +6,8 @@ import styles from '../styles/components/TimelineSlide.module.css';
 
 const TimelineSlideDesktop = ({ data, index }) => {
     const isMultiLocation = data.locations && data.locations.length > 1;
+    // Cards start collapsed so every slide fits the viewport; one card per slide can be open.
+    const [expandedKey, setExpandedKey] = useState(null);
 
     return (
         <section className={styles.section} id={data.id}>
@@ -16,7 +18,7 @@ const TimelineSlideDesktop = ({ data, index }) => {
                 transition={{ duration: 0.8, type: "spring" }}
                 viewport={{ amount: 0.3 }}
             >
-                <div style={{ marginBottom: '2rem', textAlign: 'center' }}>
+                <div className={styles.header}>
                     <h2 className={styles.title}>{data.title}</h2>
                     <h3 className={styles.subtitle}>{data.location}</h3>
                     <p className={styles.description}>
@@ -52,10 +54,18 @@ const TimelineSlideDesktop = ({ data, index }) => {
 
                                 {/* Cards Section */}
                                 <div className={styles.locationCards}>
-                                    <div className={styles.cardsList}>
-                                        {location.cards.map((card, cardIndex) => (
-                                            <InfoCard key={cardIndex} {...card} isExpanded={true} />
-                                        ))}
+                                    <div className={`${styles.cardsList} ${expandedKey && expandedKey.startsWith(`${locIndex}-`) ? styles.hasExpanded : ''}`}>
+                                        {location.cards.map((card, cardIndex) => {
+                                            const cardKey = `${locIndex}-${cardIndex}`;
+                                            return (
+                                                <InfoCard
+                                                    key={cardKey}
+                                                    {...card}
+                                                    isExpanded={expandedKey === cardKey}
+                                                    onClick={() => setExpandedKey(expandedKey === cardKey ? null : cardKey)}
+                                                />
+                                            );
+                                        })}
                                     </div>
                                 </div>
                             </div>
